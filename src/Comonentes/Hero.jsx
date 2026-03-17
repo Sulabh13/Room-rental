@@ -3,9 +3,9 @@ import { State, City } from "country-state-city";
 
 const STATS = [
   { end: 10000, suffix: "+", label: "Rooms Listed" },
-  { end: 500,   suffix: "+", label: "Cities Covered" },
+  { end: 500, suffix: "+", label: "Cities Covered" },
   { end: 50000, suffix: "+", label: "Happy Tenants" },
-  { end: 98,    suffix: "%", label: "Satisfaction Rate" },
+  { end: 98, suffix: "%", label: "Satisfaction Rate" },
 ];
 
 function formatNum(n) {
@@ -192,7 +192,7 @@ const Hero = () => {
           <span className="text-xl">🏠</span>
           <div>
             <p className="text-white text-xs font-semibold">New Listing</p>
-            <p className="text-white/60 text-[10px]">MP Nagar, Bhopal</p>
+            <p className="text-white/60 text-[10px]">Balaghat , M.P.</p>
           </div>
         </div>
         <div className="floating-badge-2 absolute bottom-36 left-8 hidden lg:flex items-center gap-2.5 bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl px-4 py-3">

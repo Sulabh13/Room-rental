@@ -22,100 +22,107 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
 
       const res = await API.post("/auth/login", formData);
+      console.log(res.data);
+
+      const token = res.data.token;
+      const user = res.data.user;
+
+      const role = user.role;   // ✔ correct role
+
+      // const res = await API.post("/auth/login", formData);
+
 
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("role", res.data.user.role);
 
-      alert(res.data.message);
+      // localStorage.setItem("token", res.data.accessToken);
+      // localStorage.setItem("user", JSON.stringify(res.data.user));
+      // localStorage.setItem("role", res.data.user.role);
+      // localStorage.setItem("refreshToken", res.data.refreshToken);
 
-      navigate("/");
+      alert("Login successful");
+
+      if (role === "owner") {
+        navigate("/owner-dashboard");
+      } else {
+        navigate("/wishlist");
+      }
 
     } catch (error) {
 
       alert(error.response?.data?.message || "Login failed");
 
     }
+
   };
 
   return (
+    <div className="min-h-screen flex items-center justify-center bg-blue-100">
 
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-200 to-blue-300">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow w-96 space-y-4">
 
-      <div className="w-[420px] bg-white/60 backdrop-blur-md shadow-xl rounded-3xl p-8">
-
-        <h2 className="text-2xl font-bold text-center mb-2">
-          Welcome Back
+        <h2 className="text-xl font-bold text-center">
+          Login
         </h2>
 
-        <p className="text-center text-gray-600 text-sm mb-6">
-          Login to continue and explore available rooms.
-        </p>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="w-full p-3 border rounded"
+          onChange={handleChange}
+        />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="relative">
 
-          {/* Email */}
           <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="w-full p-3 rounded-xl bg-gray-100 outline-none"
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            className="w-full p-3 border rounded"
             onChange={handleChange}
           />
 
-          {/* Password */}
-          <div className="relative">
-
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Password"
-              className="w-full p-3 rounded-xl bg-gray-100 outline-none"
-              onChange={handleChange}
-            />
-
-            <button
-              type="button"
-              className="absolute right-3 top-3 text-sm text-gray-600"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
-
-          </div>
-
-          {/* Role */}
-          <select
-            name="role"
-            className="w-full p-3 rounded-xl bg-gray-100 outline-none"
-            onChange={handleChange}
+          <button
+            type="button"
+            className="absolute right-3 top-3 text-sm"
+            onClick={() => setShowPassword(!showPassword)}
           >
-            <option value="user">User</option>
-            <option value="owner">Owner</option>
-          </select>
-
-          {/* Button */}
-          <button className="w-full bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-900 transition">
-            Login
+            {showPassword ? "Hide" : "Show"}
           </button>
 
-        </form>
+        </div>
 
-        {/* Signup Link */}
-        <p className="text-center text-sm mt-5">
-          Don't have an account?{" "}
-          <Link to="/signup" className="font-semibold">
-            Sign Up
+        <select
+          name="role"
+          className="w-full p-3 border rounded"
+          onChange={handleChange}
+        >
+          <option value="user">User</option>
+          <option value="owner">Owner</option>
+        </select>
+
+        <button className="w-full bg-black text-white p-3 rounded">
+          Login
+        </button>
+
+        <p className="text-sm text-center">
+          Don't have an account?
+          <Link to="/signup" className="ml-1 text-blue-600">
+            Sign up
           </Link>
         </p>
 
-      </div>
+      </form>
 
     </div>
-
   );
 }
 
