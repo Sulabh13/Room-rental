@@ -4,6 +4,7 @@ import React from "react";
 import Navbar from "./Comonentes/Navbar";
 import AppRoutes from "./routes/AppRoutes";
 import Footer from "./Comonentes/Footer";
+import ScrollToTop from "./Comonentes/ScrollToTop";
 
 const App = () => {
 
@@ -12,6 +13,7 @@ const App = () => {
     <>
 
       <Navbar />
+      <ScrollToTop />
 
       <AppRoutes />
 

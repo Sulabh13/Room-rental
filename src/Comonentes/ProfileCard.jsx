@@ -1,132 +1,136 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { User, LogOut, LayoutDashboard } from "lucide-react";
+import { User, LogOut, LayoutDashboard, Heart } from "lucide-react";
 
-const ProfileCard = () => {
-
+// ⭐ onClose prop add kiya
+const ProfileCard = ({ inDrawer = false, onClose = () => { } }) => {
     const navigate = useNavigate();
     const dropdownRef = useRef();
-
     const [open, setOpen] = useState(false);
 
     const user = JSON.parse(localStorage.getItem("user"));
     const role = localStorage.getItem("role");
 
     const logout = () => {
-
         localStorage.removeItem("token");
         localStorage.removeItem("role");
         localStorage.removeItem("user");
-
-        navigate("/");
         setOpen(false);
-
+        onClose(); // ⭐ drawer band karo
+        navigate("/");
     };
 
-    /* Close dropdown when clicking outside */
+    // ⭐ Jab bhi koi link click ho — yeh function call karo
+    const handleLinkClick = () => {
+        setOpen(false);
+        onClose(); // ⭐ drawer band karo
+    };
 
     useEffect(() => {
-
         const handleClickOutside = (event) => {
-
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setOpen(false);
             }
-
         };
-
         document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     return (
-
         <div ref={dropdownRef} className="relative">
 
-            {/* USER IMAGE */}
-
+            {/* PROFILE IMAGE */}
             <img
-                src={
-                    user?.image ||
-                    "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                }
+                src={user?.image || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
                 alt="profile"
-                className="w-10 h-10 rounded-full border cursor-pointer"
-                onClick={() => setOpen(!open)}
+                className="w-10 h-10 rounded-full border-2 border-gray-500 cursor-pointer hover:border-white transition-all"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen(!open);
+                }}
             />
 
             {/* DROPDOWN */}
-
             {open && (
-
-                <div className="absolute right-0 mt-4 w-56 bg-white text-black rounded-xl shadow-lg z-50">
-
+                <div
+                    className={`
+            ${inDrawer
+                            ? "relative mt-3 w-full"
+                            : "absolute right-0 mt-3 w-56"
+                        }
+            bg-white text-black rounded-xl shadow-2xl z-[999]
+          `}
+                    onClick={(e) => e.stopPropagation()}
+                >
                     {/* USER INFO */}
-
                     <div className="p-4 border-b">
-
-                        <p className="font-semibold text-sm">
-                            {user?.name}
-                        </p>
-
-                        <p className="text-xs text-gray-500">
-                            {user?.email}
-                        </p>
-
-                        <span className="text-xs bg-gray-200 px-2 py-1 rounded mt-1 inline-block">
+                        <div className="flex items-center gap-3">
+                            <img
+                                src={user?.image || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                                alt="profile"
+                                className="w-10 h-10 rounded-full border"
+                            />
+                            <div>
+                                <p className="font-semibold text-sm">{user?.name}</p>
+                                <p className="text-xs text-gray-500 truncate max-w-[140px]">{user?.email}</p>
+                            </div>
+                        </div>
+                        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full mt-2 inline-block capitalize">
                             {role}
                         </span>
-
                     </div>
 
-                    {/* MENU */}
-
+                    {/* MENU ITEMS */}
                     <div className="p-2 space-y-1">
 
+                        {/* PROFILE */}
                         <Link
                             to="/profile"
-                            onClick={() => setOpen(false)}
-                            className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded"
+                            onClick={handleLinkClick}  // ⭐
+                            className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg text-sm transition"
                         >
-                            <User size={16} />
+                            <User size={16} className="text-gray-500" />
                             Profile
                         </Link>
 
-                        {role === "owner" && (
+                        {/* WISHLIST */}
+                        <Link
+                            to="/wishlist"
+                            onClick={handleLinkClick}  // ⭐
+                            className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg text-sm transition"
+                        >
+                            <Heart size={16} className="text-red-400" />
+                            My Wishlist
+                        </Link>
 
+                        {/* OWNER DASHBOARD */}
+                        {role === "owner" && (
                             <Link
                                 to="/owner-dashboard"
-                                onClick={() => setOpen(false)}
-                                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded"
+                                onClick={handleLinkClick}  // ⭐
+                                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg text-sm transition"
                             >
-                                <LayoutDashboard size={16} />
+                                <LayoutDashboard size={16} className="text-gray-500" />
                                 Owner Dashboard
                             </Link>
-
                         )}
 
+                        <hr className="my-1 border-gray-100" />
+
+                        {/* LOGOUT */}
                         <button
-                            onClick={logout}
-                            className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded w-full text-left"
+                            onClick={logout}  // ⭐ logout mein bhi onClose hai
+                            className="flex items-center gap-2 px-3 py-2 hover:bg-red-50 rounded-lg w-full text-left text-sm text-red-500 transition"
                         >
                             <LogOut size={16} />
                             Logout
                         </button>
 
                     </div>
-
                 </div>
-
             )}
-
         </div>
-
     );
-
 };
 
 export default ProfileCard;
