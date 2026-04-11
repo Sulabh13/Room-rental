@@ -14,6 +14,7 @@ import {
     LayoutDashboard,
     LogOut,
     User,
+    Heart,
 } from "lucide-react";
 
 const roomTypes = [
@@ -141,6 +142,7 @@ const AddRoom = () => {
         { to: "/owner-dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
         { to: "/add-room", label: "Add Room", icon: <PlusCircle size={18} /> },
         { to: "/my-rooms", label: "My Rooms", icon: <Home size={18} /> },
+        { to: "/wishlist", label: "My Wishlist", icon: <Heart size={18} /> },
     ];
 
     /* ── SIDEBAR CONTENT ── */

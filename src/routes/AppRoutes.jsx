@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Home from "../Pages/Home";
 import Rooms from "../Pages/Rooms";
-import About from "../Pages/About";
+// import About from "../Pages/About";
 import Contact from "../Pages/Contact";
 
 import Login from "../Comonentes/Login";
@@ -28,7 +28,7 @@ const AppRoutes = () => {
 
             <Route path="/rooms" element={<Rooms />} />
 
-            <Route path="/about" element={<About />} />
+            {/* <Route path="/about" element={<About />} /> */}
 
             <Route path="/contact" element={<Contact />} />
 

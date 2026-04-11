@@ -7,16 +7,27 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // ✅ FIX 1: localStorage se seedha check karo
   const checkLogin = () => {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
-    setIsLoggedIn(!!(token && user));
+    setIsLoggedIn(!!(token && user)); 
+    // !! matlab: agar dono exist karte hain → true, nahi toh → false
   };
 
   useEffect(() => {
+    // ✅ Page load hone par check karo
     checkLogin();
+
+    // ✅ FIX 2: Custom event — same tab mein bhi kaam karega
+    // Jab bhi login/logout hoga, yeh event fire hoga
     window.addEventListener("storage", checkLogin);
-    return () => window.removeEventListener("storage", checkLogin);
+    window.addEventListener("loginStateChange", checkLogin); // 👈 NAYA
+
+    return () => {
+      window.removeEventListener("storage", checkLogin);
+      window.removeEventListener("loginStateChange", checkLogin); // 👈 NAYA
+    };
   }, []);
 
   useEffect(() => {
@@ -29,7 +40,6 @@ const Navbar = () => {
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/rooms", label: "Rooms" },
-    { to: "/about", label: "About" },
     { to: "/contact", label: "Contact" },
   ];
 
@@ -59,9 +69,10 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* DESKTOP RIGHT */}
+        {/* DESKTOP RIGHT — Login ya ProfileCard */}
         <div className="hidden md:flex items-center">
           {!isLoggedIn ? (
+            // ✅ Agar logged OUT hai → Login button dikhao
             <Link
               to="/login"
               className="bg-white text-gray-900 font-semibold px-5 py-2 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-200"
@@ -69,6 +80,7 @@ const Navbar = () => {
               Login
             </Link>
           ) : (
+            // ✅ Agar logged IN hai → ProfileCard dikhao (no login button)
             <ProfileCard inDrawer={false} onClose={() => setMenuOpen(false)} />
           )}
         </div>
@@ -83,7 +95,7 @@ const Navbar = () => {
         </button>
       </nav>
 
-      {/* MOBILE FULL WIDTH DRAWER */}
+      {/* MOBILE DRAWER */}
       <div
         className={`fixed top-0 right-0 h-full w-full bg-gray-900 text-white z-50 flex flex-col
           transform transition-transform duration-300 ease-in-out
@@ -121,9 +133,10 @@ const Navbar = () => {
           ))}
         </nav>
 
-        {/* DRAWER FOOTER */}
+        {/* DRAWER FOOTER — Login ya ProfileCard */}
         <div className="px-6 py-6 border-t border-gray-700">
           {!isLoggedIn ? (
+            // ✅ Agar logged OUT hai → Login button dikhao
             <Link
               to="/login"
               onClick={() => setMenuOpen(false)}
@@ -132,7 +145,7 @@ const Navbar = () => {
               Login
             </Link>
           ) : (
-            // ⭐ onClose prop pass kiya — drawer band hoga
+            // ✅ Agar logged IN hai → ProfileCard dikhao
             <ProfileCard inDrawer={true} onClose={() => setMenuOpen(false)} />
           )}
         </div>

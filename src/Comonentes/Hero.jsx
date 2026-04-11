@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { State, City } from "country-state-city";
 
 const STATS = [
@@ -9,7 +10,8 @@ const STATS = [
 ];
 
 function formatNum(n) {
-  if (n >= 1000) return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1).replace(/\.0$/, "") + "K";
+  if (n >= 1000)
+    return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1).replace(/\.0$/, "") + "K";
   return n.toString();
 }
 
@@ -41,7 +43,7 @@ function AnimatedStat({ end, suffix, label, delay = 0 }) {
           }, delay);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -50,7 +52,8 @@ function AnimatedStat({ end, suffix, label, delay = 0 }) {
   return (
     <div ref={ref} className="stat-card rounded-xl px-4 py-4 text-center">
       <p className="display text-2xl font-bold text-white tabular-nums">
-        {formatNum(count)}{suffix}
+        {formatNum(count)}
+        {suffix}
       </p>
       <p className="text-white/50 text-xs mt-0.5 font-medium">{label}</p>
     </div>
@@ -58,22 +61,39 @@ function AnimatedStat({ end, suffix, label, delay = 0 }) {
 }
 
 const Hero = () => {
-  const [stateInput, setStateInput] = useState("");
+  const navigate = useNavigate();
+
   const [cityInput, setCityInput] = useState("");
   const [areaInput, setAreaInput] = useState("");
-  const [stateCode, setStateCode] = useState("");
-  const [showState, setShowState] = useState(false);
+  const [stateCode, setStateCode] = useState("MP"); // Default: Madhya Pradesh
   const [showCity, setShowCity] = useState(false);
   const [activeField, setActiveField] = useState("");
 
   const states = State.getStatesOfCountry("IN");
-  const filteredStates = states.filter((s) =>
-    s.name.toLowerCase().includes(stateInput.toLowerCase())
-  );
   const cities = stateCode ? City.getCitiesOfState("IN", stateCode) : [];
   const filteredCities = cities.filter((c) =>
-    c.name.toLowerCase().includes(cityInput.toLowerCase())
+    c.name.toLowerCase().includes(cityInput.toLowerCase()),
   );
+
+  // ✅ SEARCH FUNCTION — navigates to /rooms with query params
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+
+    if (cityInput.trim()) params.set("city", cityInput.trim());
+    if (areaInput.trim()) params.set("location", areaInput.trim());
+
+    navigate(`/rooms?${params.toString()}`);
+  };
+
+  // ✅ Popular city click
+  const handlePopularCity = (city) => {
+    setCityInput(city);
+  };
+
+  // ✅ Enter key support
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSearch();
+  };
 
   return (
     <>
@@ -180,7 +200,6 @@ const Hero = () => {
       `}</style>
 
       <section className="hero-root hero-bg relative min-h-screen flex flex-col justify-center overflow-hidden">
-
         {/* Overlays */}
         <div className="absolute inset-0 bg-gradient-to-br from-stone-950/85 via-stone-900/75 to-stone-800/70"></div>
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-stone-950/60 to-transparent"></div>
@@ -192,7 +211,7 @@ const Hero = () => {
           <span className="text-xl">🏠</span>
           <div>
             <p className="text-white text-xs font-semibold">New Listing</p>
-            <p className="text-white/60 text-[10px]">Balaghat , M.P.</p>
+            <p className="text-white/60 text-[10px]">Balaghat, M.P.</p>
           </div>
         </div>
         <div className="floating-badge-2 absolute bottom-36 left-8 hidden lg:flex items-center gap-2.5 bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl px-4 py-3">
@@ -204,7 +223,6 @@ const Hero = () => {
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-5 py-20 w-full">
-
           {/* Badge */}
           <div className="anim-badge flex justify-center mb-6">
             <span className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-400/35 text-amber-300 text-xs font-semibold uppercase tracking-[0.25em] px-5 py-2 rounded-full">
@@ -216,66 +234,65 @@ const Hero = () => {
           {/* Heading */}
           <div className="anim-title text-center mb-4">
             <h1 className="display text-5xl md:text-7xl font-800 text-white leading-tight tracking-tight">
-              Find Your<br />
+              Find Your
+              <br />
               <span className="shimmer-text">Perfect Room</span>
             </h1>
           </div>
 
           {/* Subtext */}
           <p className="anim-sub text-center text-white/60 text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-            Search from thousands of verified rooms across every city in India — instantly.
+            Search from thousands of verified rooms across every city in India —
+            instantly.
           </p>
 
           {/* Search Card */}
           <div className="anim-search search-card rounded-2xl p-5 md:p-6 mb-10">
             <div className="flex items-center gap-2 mb-5">
               <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
-              <p className="text-stone-500 text-xs font-semibold uppercase tracking-widest">Search Rooms</p>
+              <p className="text-stone-500 text-xs font-semibold uppercase tracking-widest">
+                Search Rooms
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-
-              {/* State */}
-              <div className="relative">
-                <label className="flex items-center gap-1.5 text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5 px-1">
-                  <span>📍</span> State
-                </label>
-                <input
-                  type="text" placeholder="Select State" value={stateInput}
-                  onFocus={() => { setShowState(true); setActiveField("state"); }}
-                  onBlur={() => setTimeout(() => { setShowState(false); setActiveField(""); }, 180)}
-                  onChange={(e) => { setStateInput(e.target.value); setShowState(true); }}
-                  className={`search-field w-full px-4 py-3 rounded-xl text-sm text-stone-800 placeholder-stone-400 outline-none ${activeField === "state" ? "active" : ""}`}
-                />
-                {showState && stateInput && filteredStates.length > 0 && (
-                  <ul className="dropdown-list absolute w-full mt-1.5 rounded-xl max-h-44 overflow-y-auto z-30">
-                    {filteredStates.slice(0, 8).map((s) => (
-                      <li key={s.isoCode} onMouseDown={() => { setStateInput(s.name); setStateCode(s.isoCode); setShowState(false); setCityInput(""); }}
-                        className="px-4 py-2.5 text-sm text-stone-700 hover:bg-amber-50 hover:text-amber-700 cursor-pointer flex items-center gap-2 transition-colors">
-                        <span className="text-xs">📍</span> {s.name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-
-              {/* City */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {/* ✅ City Field */}
               <div className="relative">
                 <label className="flex items-center gap-1.5 text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5 px-1">
                   <span>🏙️</span> City
                 </label>
                 <input
-                  type="text" placeholder="Select City" value={cityInput}
-                  onFocus={() => { setShowCity(true); setActiveField("city"); }}
-                  onBlur={() => setTimeout(() => { setShowCity(false); setActiveField(""); }, 180)}
-                  onChange={(e) => { setCityInput(e.target.value); setShowCity(true); }}
+                  type="text"
+                  placeholder="Enter City"
+                  value={cityInput}
+                  onFocus={() => {
+                    setShowCity(true);
+                    setActiveField("city");
+                  }}
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowCity(false);
+                      setActiveField("");
+                    }, 180)
+                  }
+                  onChange={(e) => {
+                    setCityInput(e.target.value);
+                    setShowCity(true);
+                  }}
+                  onKeyDown={handleKeyDown}
                   className={`search-field w-full px-4 py-3 rounded-xl text-sm text-stone-800 placeholder-stone-400 outline-none ${activeField === "city" ? "active" : ""}`}
                 />
                 {showCity && cityInput && filteredCities.length > 0 && (
                   <ul className="dropdown-list absolute w-full mt-1.5 rounded-xl max-h-44 overflow-y-auto z-30">
                     {filteredCities.slice(0, 8).map((c) => (
-                      <li key={c.name} onMouseDown={() => { setCityInput(c.name); setShowCity(false); }}
-                        className="px-4 py-2.5 text-sm text-stone-700 hover:bg-amber-50 hover:text-amber-700 cursor-pointer flex items-center gap-2 transition-colors">
+                      <li
+                        key={c.name}
+                        onMouseDown={() => {
+                          setCityInput(c.name);
+                          setShowCity(false);
+                        }}
+                        className="px-4 py-2.5 text-sm text-stone-700 hover:bg-amber-50 hover:text-amber-700 cursor-pointer flex items-center gap-2 transition-colors"
+                      >
                         <span className="text-xs">🏙️</span> {c.name}
                       </li>
                     ))}
@@ -283,25 +300,44 @@ const Hero = () => {
                 )}
               </div>
 
-              {/* Area */}
+              {/* ✅ Area / Location Field */}
               <div>
                 <label className="flex items-center gap-1.5 text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1.5 px-1">
-                  <span>🔍</span> Area
+                  <span>🔍</span> Area / Location
                 </label>
                 <input
-                  type="text" placeholder="Area / Locality" value={areaInput}
-                  onFocus={() => setActiveField("area")} onBlur={() => setActiveField("")}
+                  type="text"
+                  placeholder="Area / Locality"
+                  value={areaInput}
+                  onFocus={() => setActiveField("area")}
+                  onBlur={() => setActiveField("")}
                   onChange={(e) => setAreaInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   className={`search-field w-full px-4 py-3 rounded-xl text-sm text-stone-800 placeholder-stone-400 outline-none ${activeField === "area" ? "active" : ""}`}
                 />
               </div>
 
-              {/* Button */}
+              {/* ✅ Search Button */}
               <div className="flex flex-col justify-end">
-                <label className="text-[10px] font-bold text-transparent uppercase tracking-wider mb-1.5 px-1 select-none">.</label>
-                <button className="search-btn text-white rounded-xl px-6 py-3 font-semibold text-sm flex items-center justify-center gap-2 w-full">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <label className="text-[10px] font-bold text-transparent uppercase tracking-wider mb-1.5 px-1 select-none">
+                  .
+                </label>
+                <button
+                  onClick={handleSearch}
+                  className="search-btn text-white rounded-xl px-6 py-3 font-semibold text-sm flex items-center justify-center gap-2 w-full"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
                   </svg>
                   Search Rooms
                 </button>
@@ -310,23 +346,40 @@ const Hero = () => {
 
             {/* Popular Cities */}
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              <span className="text-stone-400 text-xs font-medium">Popular:</span>
-              {["Mumbai", "Delhi", "Bangalore", "Bhopal", "Pune", "Hyderabad"].map((city) => (
-                <button key={city} onClick={() => setCityInput(city)}
-                  className="text-xs text-stone-500 bg-stone-100 hover:bg-amber-50 hover:text-amber-700 px-3 py-1 rounded-full transition-colors font-medium border border-transparent hover:border-amber-200">
+              <span className="text-stone-400 text-xs font-medium">
+                Popular:
+              </span>
+              {[
+                "Mumbai",
+                "Delhi",
+                "Bangalore",
+                "Bhopal",
+                "Pune",
+                "Balaghat",
+              ].map((city) => (
+                <button
+                  key={city}
+                  onClick={() => handlePopularCity(city)}
+                  className="text-xs text-stone-500 bg-stone-100 hover:bg-amber-50 hover:text-amber-700 px-3 py-1 rounded-full transition-colors font-medium border border-transparent hover:border-amber-200"
+                >
                   {city}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Stats — animated counters */}
+          {/* Stats */}
           <div className="anim-stats grid grid-cols-2 md:grid-cols-4 gap-3">
             {STATS.map((s, i) => (
-              <AnimatedStat key={i} end={s.end} suffix={s.suffix} label={s.label} delay={i * 120} />
+              <AnimatedStat
+                key={i}
+                end={s.end}
+                suffix={s.suffix}
+                label={s.label}
+                delay={i * 120}
+              />
             ))}
           </div>
-
         </div>
       </section>
     </>
