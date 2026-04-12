@@ -35,6 +35,8 @@ const MyRooms = () => {
     /* ── LOGOUT ── */
     const logout = () => {
         localStorage.clear();
+        // ✅ NAYA — Navbar ko signal do
+        window.dispatchEvent(new Event("loginStateChange"));
         navigate("/");
     };
 
@@ -96,7 +98,7 @@ const MyRooms = () => {
                         to={to}
                         onClick={() => setSidebarOpen(false)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all
-              ${to === "/my-rooms"
+                            ${to === "/my-rooms"
                                 ? "bg-blue-50 text-blue-600"
                                 : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
                             }`}
@@ -135,7 +137,7 @@ const MyRooms = () => {
             {/* ── TOAST ── */}
             {toast && (
                 <div className={`fixed top-5 right-5 z-[999] px-5 py-3 rounded-xl shadow-lg text-white text-sm font-medium
-          ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}`}>
+                    ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}`}>
                     {toast.message}
                 </div>
             )}
@@ -156,7 +158,7 @@ const MyRooms = () => {
             {/* ── MOBILE SIDEBAR DRAWER ── */}
             <aside
                 className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-xl transform transition-transform duration-300 md:hidden
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+                    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
             >
                 <div className="flex justify-end p-4 border-b border-gray-100">
                     <button
@@ -194,7 +196,9 @@ const MyRooms = () => {
                         <div>
                             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">My Rooms</h1>
                             <p className="text-gray-400 text-sm mt-1">
-                                {rooms.length > 0 ? `${rooms.length} listing${rooms.length > 1 ? "s" : ""} found` : "Manage your property listings"}
+                                {rooms.length > 0
+                                    ? `${rooms.length} listing${rooms.length > 1 ? "s" : ""} found`
+                                    : "Manage your property listings"}
                             </p>
                         </div>
                         <Link
@@ -212,7 +216,7 @@ const MyRooms = () => {
                             <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
                         </div>
 
-                        /* ── EMPTY STATE ── */
+                    /* ── EMPTY STATE ── */
                     ) : rooms.length === 0 ? (
                         <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
                             <p className="text-5xl mb-3">🏠</p>
@@ -227,7 +231,7 @@ const MyRooms = () => {
                             </Link>
                         </div>
 
-                        /* ── ROOMS GRID ── */
+                    /* ── ROOMS GRID ── */
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                             {rooms.map((room) => (
@@ -242,11 +246,9 @@ const MyRooms = () => {
                                             alt={room.title}
                                             className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300"
                                         />
-                                        {/* ROOM TYPE BADGE */}
                                         <span className="absolute top-3 left-3 bg-white/90 text-gray-700 text-xs px-2.5 py-1 rounded-full font-medium shadow-sm">
                                             {room.room_type}
                                         </span>
-                                        {/* FURNISHED BADGE */}
                                         {room.furnished && (
                                             <span className="absolute top-3 right-3 bg-green-500 text-white text-xs px-2.5 py-1 rounded-full font-medium shadow-sm">
                                                 Furnished
@@ -257,30 +259,28 @@ const MyRooms = () => {
                                     {/* CONTENT */}
                                     <div className="p-4 flex flex-col flex-grow">
 
-                                        {/* TITLE */}
                                         <h2 className="font-semibold text-gray-800 line-clamp-1">{room.title}</h2>
 
-                                        {/* LOCATION */}
                                         <p className="text-gray-400 flex items-center gap-1 text-xs mt-1.5">
                                             <MapPin size={12} />
                                             {room.city} • {room.location}
                                         </p>
 
-                                        {/* PRICE */}
                                         <p className="text-blue-600 font-bold mt-2 text-sm">
                                             ₹{room.price?.toLocaleString()}
                                             <span className="text-gray-400 font-normal"> / month</span>
                                         </p>
 
-                                        {/* DESCRIPTION */}
                                         <p className="text-xs text-gray-500 mt-2 line-clamp-2 flex-grow">
                                             {room.description}
                                         </p>
 
                                         {/* ACTION BUTTONS */}
                                         <div className="flex gap-2 mt-4">
+
+                                            {/* ✅ FIX — /rooms/ → /room/ */}
                                             <Link
-                                                to={`/rooms/${room.id}`}
+                                                to={`/room/${room.id}`}
                                                 className="flex-1 flex items-center justify-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg text-xs font-medium transition"
                                             >
                                                 <Eye size={13} />

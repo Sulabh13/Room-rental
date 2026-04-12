@@ -71,6 +71,8 @@ const OwnerDashboard = () => {
     /* ── LOGOUT ── */
     const logout = () => {
         localStorage.clear();
+        // ✅ Navbar ko batao logout ho gaya
+        window.dispatchEvent(new Event("loginStateChange"));
         navigate("/");
     };
 
@@ -132,7 +134,7 @@ const OwnerDashboard = () => {
             {/* ── TOAST ── */}
             {toast && (
                 <div className={`fixed top-5 right-5 z-[999] px-5 py-3 rounded-lg shadow-lg text-white text-sm font-medium transition-all
-          ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}`}>
+                    ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}`}>
                     {toast.message}
                 </div>
             )}
@@ -152,7 +154,7 @@ const OwnerDashboard = () => {
 
             {/* ── MOBILE SIDEBAR DRAWER ── */}
             <aside className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-xl transform transition-transform duration-300 md:hidden
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+                ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
                 <div className="flex justify-end p-4 border-b border-gray-100">
                     <button
                         onClick={() => setSidebarOpen(false)}
@@ -220,7 +222,6 @@ const OwnerDashboard = () => {
 
                     {/* ── STATS ── */}
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-
                         <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
                             <div>
                                 <p className="text-gray-400 text-xs font-medium uppercase tracking-wide">Total Rooms</p>
@@ -250,7 +251,6 @@ const OwnerDashboard = () => {
                                 <LayoutDashboard size={22} className="text-green-500" />
                             </div>
                         </div>
-
                     </div>
 
                     {/* ── ROOMS SECTION ── */}
@@ -297,31 +297,28 @@ const OwnerDashboard = () => {
                                     </div>
 
                                     <div className="p-4 flex flex-col flex-grow">
-
-                                        {/* TITLE */}
                                         <h3 className="font-semibold text-gray-800 line-clamp-1">{room.title}</h3>
 
-                                        {/* LOCATION */}
                                         <p className="text-gray-400 flex items-center gap-1 text-xs mt-1">
                                             <MapPin size={12} />
                                             {room.city} • {room.location}
                                         </p>
 
-                                        {/* PRICE */}
                                         <p className="text-blue-600 font-bold mt-2 text-sm">
                                             ₹{room.price?.toLocaleString()}
                                             <span className="text-gray-400 font-normal"> / month</span>
                                         </p>
 
-                                        {/* DESCRIPTION */}
                                         <p className="text-xs text-gray-500 mt-2 line-clamp-2 flex-grow">
                                             {room.description}
                                         </p>
 
                                         {/* ACTION BUTTONS */}
                                         <div className="flex gap-2 mt-4">
+
+                                            {/* ✅ FIX — /rooms → /room (s hata diya) */}
                                             <Link
-                                                to={`/rooms/${room.id}`}
+                                                to={`/room/${room.id}`}
                                                 className="flex-1 flex items-center justify-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg text-xs font-medium transition"
                                             >
                                                 <Eye size={13} />
@@ -349,13 +346,11 @@ const OwnerDashboard = () => {
                                                 Delete
                                             </button>
                                         </div>
-
                                     </div>
                                 </div>
                             ))}
                         </div>
                     )}
-
                 </div>
             </main>
         </div>

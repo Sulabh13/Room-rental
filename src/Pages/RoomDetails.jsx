@@ -57,10 +57,23 @@ const RoomDetails = () => {
         fetchReviews();
     }, [id]);
 
+    /* ── CALL OWNER ── */
+    const handleCall = () => {
+        if (!room?.owner?.phone) {
+            showToast("Owner ka phone number available nahi hai.", "error");
+            return;
+        }
+        window.location.href = `tel:${room.owner.phone}`;
+    };
+
+    /* ── OPEN GOOGLE MAPS ── */
+    const handleLocation = () => {
+        const address = `${room?.location}, ${room?.city}`;
+        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+        window.open(mapsUrl, "_blank");
+    };
+
     /* ── SUBMIT REVIEW ── */
-    /* Backend: POST /api/reviews/:roomId */
-    /* Auth: token from protect middleware */
-    /* Body: { rating, comment } only */
     const submitReview = async () => {
         if (!token) {
             showToast("Please login to submit a review.", "error");
@@ -88,7 +101,6 @@ const RoomDetails = () => {
 
         } catch (error) {
             console.error("Submit review error:", error);
-
             const msg = error.response?.data?.message;
 
             if (error.response?.status === 400 && msg === "You have already reviewed this room") {
@@ -107,9 +119,6 @@ const RoomDetails = () => {
     };
 
     /* ── ADD WISHLIST ── */
-    /* Backend: POST /api/wishlist/:roomId */
-    /* Auth: token from protect middleware */
-    /* No body needed */
     const addWishlist = async () => {
         if (!token) {
             showToast("Please login to add to wishlist.", "error");
@@ -125,7 +134,6 @@ const RoomDetails = () => {
 
         } catch (error) {
             console.error("Wishlist error:", error);
-
             const msg = error.response?.data?.message;
 
             if (error.response?.status === 400 && msg === "Room already in wishlist") {
@@ -158,11 +166,7 @@ const RoomDetails = () => {
 
             {/* ── TOAST NOTIFICATION ── */}
             {toast && (
-                <div
-                    className={`fixed top-5 right-5 z-[999] px-5 py-3 rounded-lg shadow-lg text-white text-sm font-medium
-            transition-all duration-300
-            ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}`}
-                >
+                <div className={`fixed top-5 right-5 z-[999] px-5 py-3 rounded-lg shadow-lg text-white text-sm font-medium transition-all duration-300 ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}`}>
                     {toast.message}
                 </div>
             )}
@@ -220,7 +224,8 @@ const RoomDetails = () => {
                     </p>
 
                     <p className="text-blue-600 text-2xl font-bold mt-3">
-                        ₹{room.price?.toLocaleString()} <span className="text-base font-normal text-gray-500">/ month</span>
+                        ₹{room.price?.toLocaleString()}{" "}
+                        <span className="text-base font-normal text-gray-500">/ month</span>
                     </p>
 
                     <div className="mt-4 space-y-2 text-sm sm:text-base">
@@ -232,21 +237,88 @@ const RoomDetails = () => {
                         {room.description}
                     </p>
 
-                    {/* WISHLIST BUTTON */}
-                    <button
-                        onClick={addWishlist}
-                        disabled={wishlistLoading}
-                        className="mt-6 flex items-center gap-2 bg-red-500 hover:bg-red-600 disabled:opacity-60
-              text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
-                    >
-                        {wishlistLoading ? (
-                            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                            <span>❤️</span>
-                        )}
-                        {wishlistLoading ? "Adding..." : "Add to Wishlist"}
-                    </button>
+                    {/* ── ACTION BUTTONS ── */}
+                    <div className="mt-6 flex flex-wrap gap-3">
+
+                        {/* WISHLIST BUTTON */}
+                        <button
+                            onClick={addWishlist}
+                            disabled={wishlistLoading}
+                            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 disabled:opacity-60 text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
+                        >
+                            {wishlistLoading ? (
+                                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                                <span>❤️</span>
+                            )}
+                            {wishlistLoading ? "Adding..." : "Wishlist"}
+                        </button>
+
+                        {/* CALL BUTTON */}
+                        <button
+                            onClick={handleCall}
+                            className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
+                        >
+                            📞 {room?.owner?.phone ? room.owner.phone : "Call Owner"}
+                        </button>
+
+                        {/* LOCATION BUTTON */}
+                        <button
+                            onClick={handleLocation}
+                            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
+                        >
+                            📍 View on Map
+                        </button>
+
+                    </div>
+
                 </div>
+
+                {/* ── OWNER CARD ── */}
+                {room?.owner && (
+                    <div className="bg-gray-50 border rounded-xl p-5 h-fit">
+                        <h3 className="font-semibold text-lg mb-4">🏠 Owner Details</h3>
+
+                        <div className="flex items-center gap-3 mb-4">
+                            {/* Avatar */}
+                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xl">
+                                {room.owner.name?.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <p className="font-semibold text-gray-800">{room.owner.name}</p>
+                                <p className="text-xs text-gray-400">Property Owner</p>
+                            </div>
+                        </div>
+
+                        {/* Phone */}
+                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                            <span>📞</span>
+                            <span>{room.owner.phone || "Not available"}</span>
+                        </div>
+
+                        {/* Location */}
+                        <div className="flex items-center gap-2 text-sm text-gray-600 mb-5">
+                            <span>📍</span>
+                            <span>{room.location}, {room.city}</span>
+                        </div>
+
+                        {/* Call + Map Buttons */}
+                        <div className="flex flex-col gap-2">
+                            <button
+                                onClick={handleCall}
+                                className="w-full bg-green-500 hover:bg-green-600 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                            >
+                                📞 Call Owner
+                            </button>
+                            <button
+                                onClick={handleLocation}
+                                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                            >
+                                📍 View Location on Map
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* ── REVIEWS LIST ── */}
@@ -271,10 +343,7 @@ const RoomDetails = () => {
                                     <p className="font-semibold text-sm">{rev.users?.name || "Anonymous"}</p>
                                     <div className="flex gap-0.5">
                                         {[1, 2, 3, 4, 5].map((s) => (
-                                            <span
-                                                key={s}
-                                                className={`text-base ${s <= rev.rating ? "text-yellow-400" : "text-gray-200"}`}
-                                            >
+                                            <span key={s} className={`text-base ${s <= rev.rating ? "text-yellow-400" : "text-gray-200"}`}>
                                                 ★
                                             </span>
                                         ))}
@@ -297,14 +366,12 @@ const RoomDetails = () => {
                 <div className="mt-8 border p-5 sm:p-6 rounded-xl bg-gray-50">
                     <h3 className="font-semibold text-lg mb-4">Write a Review</h3>
 
-                    {/* STAR RATING PICKER */}
                     <div className="flex items-center gap-1 mb-4">
                         {[1, 2, 3, 4, 5].map((star) => (
                             <button
                                 key={star}
                                 onClick={() => setRating(star)}
-                                className={`text-3xl transition-transform hover:scale-110
-                  ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
+                                className={`text-3xl transition-transform hover:scale-110 ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
                             >
                                 ★
                             </button>
@@ -312,22 +379,18 @@ const RoomDetails = () => {
                         <span className="text-sm text-gray-500 ml-2">{rating} / 5</span>
                     </div>
 
-                    {/* COMMENT TEXTAREA */}
                     <textarea
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         placeholder="Share your experience about this room..."
                         rows={4}
-                        className="border w-full p-3 rounded-lg text-sm focus:outline-none focus:ring-2
-              focus:ring-blue-400 resize-none bg-white"
+                        className="border w-full p-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none bg-white"
                     />
 
-                    {/* SUBMIT BUTTON */}
                     <button
                         onClick={submitReview}
                         disabled={reviewLoading || !comment.trim()}
-                        className="mt-3 flex items-center gap-2 bg-blue-600 hover:bg-blue-700
-              disabled:opacity-60 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                        className="mt-3 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors"
                     >
                         {reviewLoading && (
                             <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -339,10 +402,8 @@ const RoomDetails = () => {
                 <div className="mt-8 border p-5 rounded-xl bg-gray-50 text-center">
                     <p className="text-gray-500 text-sm">
                         Please{" "}
-                        <a href="/login" className="text-blue-600 underline font-medium">
-                            login
-                        </a>{" "}
-                        to write a review or add to wishlist.
+                        <a href="/login" className="text-blue-600 underline font-medium">login</a>
+                        {" "}to write a review or add to wishlist.
                     </p>
                 </div>
             )}

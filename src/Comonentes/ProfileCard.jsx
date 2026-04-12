@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { User, LogOut, LayoutDashboard, Heart } from "lucide-react";
 
-// ⭐ onClose prop add kiya
 const ProfileCard = ({ inDrawer = false, onClose = () => { } }) => {
     const navigate = useNavigate();
     const dropdownRef = useRef();
@@ -15,15 +14,18 @@ const ProfileCard = ({ inDrawer = false, onClose = () => { } }) => {
         localStorage.removeItem("token");
         localStorage.removeItem("role");
         localStorage.removeItem("user");
+
+        // ✅ YEH LINE ADD KI — Navbar turant Login button dikhayega
+        window.dispatchEvent(new Event("loginStateChange"));
+
         setOpen(false);
-        onClose(); // ⭐ drawer band karo
+        onClose();
         navigate("/");
     };
 
-    // ⭐ Jab bhi koi link click ho — yeh function call karo
     const handleLinkClick = () => {
         setOpen(false);
-        onClose(); // ⭐ drawer band karo
+        onClose();
     };
 
     useEffect(() => {
@@ -54,12 +56,9 @@ const ProfileCard = ({ inDrawer = false, onClose = () => { } }) => {
             {open && (
                 <div
                     className={`
-            ${inDrawer
-                            ? "relative mt-3 w-full"
-                            : "absolute right-0 mt-3 w-56"
-                        }
-            bg-white text-black rounded-xl shadow-2xl z-[999]
-          `}
+                        ${inDrawer ? "relative mt-3 w-full" : "absolute right-0 mt-3 w-56"}
+                        bg-white text-black rounded-xl shadow-2xl z-[999]
+                    `}
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* USER INFO */}
@@ -83,31 +82,28 @@ const ProfileCard = ({ inDrawer = false, onClose = () => { } }) => {
                     {/* MENU ITEMS */}
                     <div className="p-2 space-y-1">
 
-                        {/* PROFILE */}
                         <Link
                             to="/profile"
-                            onClick={handleLinkClick}  // ⭐
+                            onClick={handleLinkClick}
                             className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg text-sm transition"
                         >
                             <User size={16} className="text-gray-500" />
                             Profile
                         </Link>
 
-                        {/* WISHLIST */}
                         <Link
                             to="/wishlist"
-                            onClick={handleLinkClick}  // ⭐
+                            onClick={handleLinkClick}
                             className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg text-sm transition"
                         >
                             <Heart size={16} className="text-red-400" />
                             My Wishlist
                         </Link>
 
-                        {/* OWNER DASHBOARD */}
                         {role === "owner" && (
                             <Link
                                 to="/owner-dashboard"
-                                onClick={handleLinkClick}  // ⭐
+                                onClick={handleLinkClick}
                                 className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg text-sm transition"
                             >
                                 <LayoutDashboard size={16} className="text-gray-500" />
@@ -119,7 +115,7 @@ const ProfileCard = ({ inDrawer = false, onClose = () => { } }) => {
 
                         {/* LOGOUT */}
                         <button
-                            onClick={logout}  // ⭐ logout mein bhi onClose hai
+                            onClick={logout}
                             className="flex items-center gap-2 px-3 py-2 hover:bg-red-50 rounded-lg w-full text-left text-sm text-red-500 transition"
                         >
                             <LogOut size={16} />
