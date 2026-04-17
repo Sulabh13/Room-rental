@@ -15,6 +15,7 @@ import {
     LogOut,
     User,
     Heart,
+    Video,        // ✅ NEW
 } from "lucide-react";
 
 const roomTypes = [
@@ -27,6 +28,7 @@ const AddRoom = () => {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
     const fileInputRef = useRef();
+    const videoInputRef = useRef(); // ✅ NEW
 
     const [form, setForm] = useState({
         title: "",
@@ -41,6 +43,8 @@ const AddRoom = () => {
     const [customType, setCustomType] = useState("");
     const [images, setImages] = useState([]);
     const [preview, setPreview] = useState([]);
+    const [video, setVideo] = useState(null);           // ✅ NEW
+    const [videoPreview, setVideoPreview] = useState(null); // ✅ NEW
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState(null);
     const [dragOver, setDragOver] = useState(false);
@@ -103,6 +107,27 @@ const AddRoom = () => {
         setPreview((prev) => prev.filter((_, i) => i !== index));
     };
 
+    /* ── VIDEO HANDLER ── */ // ✅ NEW
+    const handleVideo = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (file.size > 100 * 1024 * 1024) {
+            showToast("Video size must be under 100MB.", "error");
+            return;
+        }
+
+        setVideo(file);
+        setVideoPreview(URL.createObjectURL(file));
+    };
+
+    /* ── REMOVE VIDEO ── */ // ✅ NEW
+    const removeVideo = () => {
+        setVideo(null);
+        setVideoPreview(null);
+        videoInputRef.current.value = ""; // input reset
+    };
+
     /* ── SUBMIT ── */
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -125,6 +150,7 @@ const AddRoom = () => {
             formData.set("room_type", roomTypeFinal);
             formData.append("owner_id", user.id);
             images.forEach((img) => formData.append("images", img));
+            if (video) formData.append("video", video); // ✅ NEW
 
             await API.post("/rooms", formData);
             showToast("Room added successfully! ✅");
@@ -148,14 +174,10 @@ const AddRoom = () => {
     /* ── SIDEBAR CONTENT ── */
     const SidebarContent = () => (
         <div className="flex flex-col h-full">
-
-            {/* LOGO */}
             <div className="px-6 py-5 border-b border-gray-100">
                 <h2 className="text-xl font-bold text-gray-800">🏠 Owner Panel</h2>
                 <p className="text-xs text-gray-400 mt-0.5">Manage your listings</p>
             </div>
-
-            {/* NAV LINKS */}
             <nav className="flex-1 px-4 py-5 space-y-1">
                 {navLinks.map(({ to, label, icon }) => (
                     <Link
@@ -173,8 +195,6 @@ const AddRoom = () => {
                     </Link>
                 ))}
             </nav>
-
-            {/* PROFILE + LOGOUT */}
             <div className="px-4 py-4 border-t border-gray-100">
                 <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gray-50 mb-3">
                     <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
@@ -256,7 +276,6 @@ const AddRoom = () => {
                 {/* ── FORM AREA ── */}
                 <div className="p-4 sm:p-6 lg:p-8">
 
-                    {/* PAGE HEADER */}
                     <div className="mb-6">
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Add New Room</h1>
                         <p className="text-gray-400 text-sm mt-1">Fill in the details to list your property</p>
@@ -272,10 +291,7 @@ const AddRoom = () => {
                                 </div>
                                 <h2 className="font-semibold text-gray-800">Basic Information</h2>
                             </div>
-
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                                {/* TITLE */}
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-medium text-gray-600">Room Title *</label>
                                     <input
@@ -288,8 +304,6 @@ const AddRoom = () => {
                                         className="border border-gray-200 p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                                     />
                                 </div>
-
-                                {/* PRICE */}
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-medium text-gray-600">Price / Month *</label>
                                     <div className="relative">
@@ -305,8 +319,6 @@ const AddRoom = () => {
                                         />
                                     </div>
                                 </div>
-
-                                {/* CITY */}
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-medium text-gray-600">City</label>
                                     <div className="relative">
@@ -320,8 +332,6 @@ const AddRoom = () => {
                                         />
                                     </div>
                                 </div>
-
-                                {/* LOCATION */}
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-medium text-gray-600">Location / Area *</label>
                                     <div className="relative">
@@ -337,7 +347,6 @@ const AddRoom = () => {
                                         />
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
@@ -349,7 +358,6 @@ const AddRoom = () => {
                                 </div>
                                 <h2 className="font-semibold text-gray-800">Room Type & Features</h2>
                             </div>
-
                             <label className="text-sm font-medium text-gray-600 mb-3 block">Select Room Type *</label>
                             <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2">
                                 {roomTypes.map((type) => (
@@ -367,7 +375,6 @@ const AddRoom = () => {
                                     </button>
                                 ))}
                             </div>
-
                             {form.room_type === "" && (
                                 <input
                                     type="text"
@@ -378,8 +385,6 @@ const AddRoom = () => {
                                     className="border border-gray-200 p-3 rounded-xl text-sm mt-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                                 />
                             )}
-
-                            {/* FURNISHED TOGGLE */}
                             <div className="mt-5">
                                 <label className="flex items-center gap-3 cursor-pointer w-fit">
                                     <div
@@ -388,8 +393,7 @@ const AddRoom = () => {
                       ${form.furnished ? "bg-blue-600" : "bg-gray-200"}`}
                                     >
                                         <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all
-                      ${form.furnished ? "left-5" : "left-0.5"}`}
-                                        />
+                      ${form.furnished ? "left-5" : "left-0.5"}`} />
                                     </div>
                                     <span className="text-sm font-medium text-gray-700">
                                         Furnished
@@ -437,7 +441,6 @@ const AddRoom = () => {
                                     {images.length} / 5
                                 </span>
                             </div>
-
                             <input
                                 ref={fileInputRef}
                                 type="file"
@@ -446,7 +449,6 @@ const AddRoom = () => {
                                 onChange={handleImages}
                                 className="hidden"
                             />
-
                             {images.length < 5 && (
                                 <div
                                     onClick={() => fileInputRef.current.click()}
@@ -464,7 +466,6 @@ const AddRoom = () => {
                                     <p className="text-xs text-gray-400 mt-1">PNG, JPG, WEBP — Max 5 images</p>
                                 </div>
                             )}
-
                             {preview.length > 0 && (
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mt-4">
                                     {preview.map((img, index) => (
@@ -489,6 +490,77 @@ const AddRoom = () => {
                                             )}
                                         </div>
                                     ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* ── SECTION 5: VIDEO ── */}  {/* ✅ BILKUL NAYA SECTION */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
+                            <div className="flex items-center justify-between mb-5">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-8 h-8 bg-pink-50 rounded-lg flex items-center justify-center">
+                                        <Video size={16} className="text-pink-500" />
+                                    </div>
+                                    <div>
+                                        <h2 className="font-semibold text-gray-800">Room Video</h2>
+                                        <p className="text-xs text-gray-400">Optional • Max 100MB</p>
+                                    </div>
+                                </div>
+                                {video && (
+                                    <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-green-100 text-green-600">
+                                        Video Added ✓
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Hidden file input */}
+                            <input
+                                ref={videoInputRef}
+                                type="file"
+                                accept="video/mp4,video/quicktime,video/x-msvideo"
+                                onChange={handleVideo}
+                                className="hidden"
+                            />
+
+                            {/* Upload area - video nahi hai tab */}
+                            {!videoPreview ? (
+                                <div
+                                    onClick={() => videoInputRef.current.click()}
+                                    className="border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer
+                                               border-gray-200 hover:border-pink-300 hover:bg-pink-50 transition-all"
+                                >
+                                    <Video size={28} className="mx-auto text-gray-300 mb-2" />
+                                    <p className="text-sm font-medium text-gray-500">
+                                        Click to upload room tour video
+                                    </p>
+                                    <p className="text-xs text-gray-400 mt-1">
+                                        MP4, MOV, AVI — Max 100MB
+                                    </p>
+                                </div>
+                            ) : (
+                                /* Video preview - video hai tab */
+                                <div className="relative rounded-2xl overflow-hidden bg-black">
+                                    <video
+                                        src={videoPreview}
+                                        controls
+                                        className="w-full max-h-64 object-contain"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={removeVideo}
+                                        className="absolute top-3 right-3 w-8 h-8 bg-red-500 hover:bg-red-600
+                                                   text-white rounded-full flex items-center justify-center shadow-lg transition"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                    <div className="px-4 py-2 bg-gray-900">
+                                        <p className="text-xs text-gray-400 truncate">
+                                            📹 {video?.name}
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                            {(video?.size / (1024 * 1024)).toFixed(1)} MB
+                                        </p>
+                                    </div>
                                 </div>
                             )}
                         </div>
