@@ -13,7 +13,7 @@ const Profile = () => {
 
     return (
 
-        <div className="min-h-screen bg-gray-100 p-8">
+        <div className="min-h-screen bg-gray-100 pt-32">
 
             <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
 

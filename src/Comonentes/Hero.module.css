@@ -1,0 +1,187 @@
+@import url("https://fonts.googleapis.com/css2?family= :wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap");
+
+/* ── FONTS ── */
+.heroRoot * {
+  font-family: "Inter", sans-serif;
+}
+.heroRoot .display {
+  font-family: "Syne", sans-serif;
+}
+
+/* ── BACKGROUND IMAGE ── */
+.heroBg {
+  background-image: url("https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1800&q=85");
+  background-size: cover;
+  background-position: center 40%;
+}
+
+/* ── KEYFRAMES ── */
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(251, 191, 36, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+  }
+}
+
+/* ── ANIMATION CLASSES ── */
+.animBadge {
+  animation: fadeDown 0.6s ease 0.1s both;
+}
+.animTitle {
+  animation: fadeDown 0.7s ease 0.25s both;
+}
+.animSub {
+  animation: fadeUp 0.7s ease 0.4s both;
+}
+.animSearch {
+  animation: scaleUp 0.7s ease 0.55s both;
+}
+.animStats {
+  animation: fadeUp 0.7s ease 0.75s both;
+}
+
+/* ── SHIMMER TEXT (needs -webkit-background-clip) ── */
+.shimmerText {
+  background: linear-gradient(
+    90deg,
+    #fbbf24,
+    #f97316,
+    #fbbf24,
+    #fde68a,
+    #fbbf24
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ── SEARCH CARD (backdrop-filter + complex shadow) ── */
+.searchCard {
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.22),
+    0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ── SEARCH FIELD ── */
+.searchField {
+  border: 1.5px solid #e5e7eb;
+  transition: all 0.25s ease;
+  background: #fafafa;
+}
+.searchField:hover {
+  border-color: #d1d5db;
+  background: #fff;
+}
+.searchFieldActive {
+  border-color: #f59e0b;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+
+/* ── SEARCH BUTTON (gradient + hover gradient) ── */
+.searchBtn {
+  background: linear-gradient(135deg, #1c1917, #292524);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+.searchBtn:hover {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+}
+
+/* ── STAT CARD (backdrop-filter) ── */
+.statCard {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+.statCard:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+/* ── DROPDOWN ── */
+.dropdownList {
+  background: white;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  animation: fadeUp 0.2s ease;
+}
+
+/* ── FLOATING BADGES ── */
+.floatingBadge {
+  animation: float 3s ease-in-out infinite;
+}
+.floatingBadge2 {
+  animation: float 3s ease-in-out 1.5s infinite;
+}
+
+/* ── PULSE DOT ── */
+.pulseDot {
+  animation: pulse-ring 2s infinite;
+  border-radius: 50%;
+}
+
+/* ── TABULAR NUMS ── */
+.tabularNums {
+  font-variant-numeric: tabular-nums;
+}

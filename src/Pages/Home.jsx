@@ -176,7 +176,7 @@ const Home = () => {
             Browse by Location
           </p>
           <h2 className="text-4xl font-light">
-            Room <span className="italic text-gray-500">Collection</span>
+            Room Collection 
           </h2>
         </div>
 
@@ -253,102 +253,7 @@ const Home = () => {
 
       {/* ================= WHY CHOOSE US ================= */}
 
-      <section
-        className="relative py-20 px-6 overflow-hidden bg-[#c0c0bf]"
-        style={{
-          background: "linear-gradient(#fff)",
-        }}
-      >
-        <span className="absolute top-10 left-1/2 w-2 h-2 rounded-full bg-blue-400 opacity-70" />
-        <span className="absolute top-16 right-16 w-3 h-3 rounded-full bg-purple-400 opacity-60" />
-        <span className="absolute bottom-16 left-10 w-3 h-3 rounded-full bg-orange-400 opacity-70" />
-        <span className="absolute bottom-10 right-1/3 w-2 h-2 rounded-full bg-blue-300 opacity-60" />
-        <span className="absolute top-1/2 right-6 w-2 h-2 rounded-full bg-purple-300 opacity-50" />
-
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <span
-              className="inline-block text-xs font-bold tracking-widest uppercase px-5 py-2 rounded-full text-white mb-5"
-              style={{ background: "linear-gradient(90deg, #4f8ef7, #38c5f5)" }}
-            >
-              Powerful Features
-            </span>
-            <h2
-              className="text-4xl md:text-5xl font-extrabold mb-4"
-              style={{ color: "#1a1a4e" }}
-            >
-              Why Choose Us ?
-            </h2>
-            <p className="text-gray-500 text-base max-w-xl mx-auto leading-relaxed">
-              Room Dekhho makes finding accommodation simple, fast, and
-              stress-free with these powerful features.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature) => (
-              <div
-                key={feature.id}
-                className="relative bg-white rounded-2xl overflow-hidden group transition-all duration-300 cursor-pointer"
-                style={{
-                  padding: "2px",
-                  background:
-                    "linear-gradient(white, white) padding-box, linear-gradient(135deg, #e0e7ff, #c7d2fe) border-box",
-                  border: "2px solid transparent",
-                  boxShadow: "0 2px 16px 0 rgba(80,120,255,0.06)",
-                  transition:
-                    "transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "scale(1.04)";
-                  e.currentTarget.style.boxShadow =
-                    "0 12px 40px 0 rgba(79,142,247,0.22)";
-                  e.currentTarget.style.background =
-                    "linear-gradient(white, white) padding-box, linear-gradient(135deg, #4f8ef7, #38c5f5) border-box";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                  e.currentTarget.style.boxShadow =
-                    "0 2px 16px 0 rgba(80,120,255,0.06)";
-                  e.currentTarget.style.background =
-                    "linear-gradient(white, white) padding-box, linear-gradient(135deg, #e0e7ff, #c7d2fe) border-box";
-                }}
-              >
-                <div className="p-7">
-                  <div className="flex items-start justify-between mb-5">
-                    <h3
-                      className="font-bold text-base leading-snug pr-3"
-                      style={{ color: "#1a1a4e", maxWidth: "72%" }}
-                    >
-                      {feature.title}
-                    </h3>
-                    <span className="text-4xl drop-shadow-sm">
-                      {feature.emoji}
-                    </span>
-                  </div>
-                  <div
-                    className="w-10 h-0.5 rounded-full mb-4"
-                    style={{
-                      background: "linear-gradient(90deg, #4f8ef7, #38c5f5)",
-                    }}
-                  />
-                  <p className="text-gray-500 text-sm leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
-                <div
-                  className="absolute bottom-0 right-0 w-11 h-11 flex items-center justify-center rounded-tl-2xl text-white text-xs font-bold"
-                  style={{
-                    background: "linear-gradient(135deg, #4f8ef7, #38c5f5)",
-                  }}
-                >
-                  {feature.id}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
     </div>
   );
 };

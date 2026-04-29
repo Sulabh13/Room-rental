@@ -71,12 +71,16 @@ const Rooms = () => {
     setFilters(newFilters);
   }, [searchParams]);
 
+  useEffect(() => {
+    console.log("rooms", rooms);
+  }, [rooms]);
+
   // ✅ Filters change hone par rooms fetch karo
   useEffect(() => {
     setPage(1);
     setHasMore(true);
     fetchRooms(1, true);
-  }, [filters]);
+  }, [searchParams]);
 
   useEffect(() => {
     if (page > 1) fetchRooms(page);
@@ -87,16 +91,13 @@ const Rooms = () => {
   };
 
   const searchRooms = () => {
-    // URL params bhi update karo (browser back button ke liye)
     const params = {};
     if (filters.city) params.city = filters.city;
     if (filters.location) params.location = filters.location;
     if (filters.room_type) params.room_type = filters.room_type;
     if (filters.price) params.price = filters.price;
-    setSearchParams(params);
-    setPage(1);
-    setHasMore(true);
-    fetchRooms(1, true);
+
+    setSearchParams(params); // 👉 only this
   };
 
   const resetFilters = () => {
@@ -113,7 +114,7 @@ const Rooms = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold mb-6">Available Rooms</h1>
+      <h1 className="text-3xl font-bold mb-6 mt-14">Available Rooms</h1>
 
       {/* ✅ Active filters badge — Hero se aaye filters dikhao */}
       {(filters.city || filters.location) && (
@@ -177,9 +178,11 @@ const Rooms = () => {
           <div className="flex gap-2">
             <button
               onClick={searchRooms}
-              className="bg-blue-600 text-white px-4 py-3 rounded w-full hover:bg-blue-700"
+              className="w-full h-12 px-5 rounded-md font-semibold bg-black text-gray-300 
+  shadow-lg hover:bg-[#2b2a2a] transition-all duration-300 flex items-center justify-center gap-2"
             >
               Search
+              {/* <span className="text-xs text-gray-500">Find Rooms</span> */}
             </button>
             <button
               onClick={resetFilters}

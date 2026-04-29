@@ -139,7 +139,7 @@ const Wishlist = () => {
     );
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex min-h-screen bg-gray-50 pt-16">
 
             {/* ── TOAST ── */}
             {toast && (

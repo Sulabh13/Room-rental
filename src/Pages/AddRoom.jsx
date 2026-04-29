@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import API from "../api/axios";
 import {
@@ -15,7 +15,9 @@ import {
     LogOut,
     User,
     Heart,
-    Video,        // ✅ NEW
+    Video,
+    Phone,
+    Navigation,
 } from "lucide-react";
 
 const roomTypes = [
@@ -28,7 +30,12 @@ const AddRoom = () => {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
     const fileInputRef = useRef();
-    const videoInputRef = useRef(); // ✅ NEW
+    const videoInputRef = useRef();
+
+    /* ── MAP REFS ── */
+    const mapRef = useRef(null);
+    const leafletMapRef = useRef(null);
+    const markerRef = useRef(null);
 
     const [form, setForm] = useState({
         title: "",
@@ -36,6 +43,8 @@ const AddRoom = () => {
         price: "",
         city: "Balaghat",
         location: "",
+        current_location: "",
+        phone: "",
         room_type: "Single",
         furnished: false,
     });
@@ -43,12 +52,14 @@ const AddRoom = () => {
     const [customType, setCustomType] = useState("");
     const [images, setImages] = useState([]);
     const [preview, setPreview] = useState([]);
-    const [video, setVideo] = useState(null);           // ✅ NEW
-    const [videoPreview, setVideoPreview] = useState(null); // ✅ NEW
+    const [video, setVideo] = useState(null);
+    const [videoPreview, setVideoPreview] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [locationLoading, setLocationLoading] = useState(false);
     const [toast, setToast] = useState(null);
     const [dragOver, setDragOver] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [mapReady, setMapReady] = useState(false);
 
     /* ── TOAST ── */
     const showToast = (message, type = "success") => {
@@ -61,6 +72,123 @@ const AddRoom = () => {
         localStorage.clear();
         navigate("/");
     };
+
+    /* ── LOAD LEAFLET CSS + JS DYNAMICALLY ── */
+    useEffect(() => {
+        // Load Leaflet CSS
+        if (!document.getElementById("leaflet-css")) {
+            const link = document.createElement("link");
+            link.id = "leaflet-css";
+            link.rel = "stylesheet";
+            link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+            document.head.appendChild(link);
+        }
+
+        // Load Leaflet JS
+        if (!window.L) {
+            const script = document.createElement("script");
+            script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+            script.async = true;
+            script.onload = () => setMapReady(true);
+            document.body.appendChild(script);
+        } else {
+            setMapReady(true);
+        }
+    }, []);
+
+    /* ── PLACE MARKER ON MAP ── */
+    const placeMarker = (lat, lng) => {
+        const L = window.L;
+        if (!leafletMapRef.current || !L) return;
+
+        if (markerRef.current) {
+            markerRef.current.setLatLng([lat, lng]);
+        } else {
+            const customIcon = L.divIcon({
+                className: "",
+                html: `<div style="
+                    width: 36px; height: 36px;
+                    background: #2563eb;
+                    border: 3px solid white;
+                    border-radius: 50% 50% 50% 0;
+                    transform: rotate(-45deg);
+                    box-shadow: 0 2px 8px rgba(37,99,235,0.5);
+                "></div>`,
+                iconSize: [36, 36],
+                iconAnchor: [18, 36],
+            });
+
+            markerRef.current = L.marker([lat, lng], {
+                draggable: true,
+                icon: customIcon,
+            }).addTo(leafletMapRef.current);
+
+            markerRef.current.on("dragend", async (e) => {
+                const pos = e.target.getLatLng();
+                await reverseGeocode(pos.lat, pos.lng);
+            });
+        }
+
+        leafletMapRef.current.setView([lat, lng], 15);
+    };
+
+    /* ── REVERSE GEOCODE ── */
+    const reverseGeocode = async (lat, lng) => {
+        try {
+            const res = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+            );
+            const data = await res.json();
+            setForm((prev) => ({
+                ...prev,
+                current_location: data.display_name || `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+            }));
+        } catch {
+            setForm((prev) => ({
+                ...prev,
+                current_location: `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+            }));
+        }
+    };
+
+    /* ── INIT LEAFLET MAP ── */
+    useEffect(() => {
+        if (!mapReady || !mapRef.current || leafletMapRef.current) return;
+
+        const L = window.L;
+
+        // Default center: Balaghat
+        const defaultLat = 21.8121;
+        const defaultLng = 80.1927;
+
+        const map = L.map(mapRef.current, {
+            center: [defaultLat, defaultLng],
+            zoom: 13,
+            zoomControl: true,
+        });
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19,
+        }).addTo(map);
+
+        leafletMapRef.current = map;
+
+        // Click on map to pick location
+        map.on("click", async (e) => {
+            const { lat, lng } = e.latlng;
+            placeMarker(lat, lng);
+            await reverseGeocode(lat, lng);
+        });
+
+        return () => {
+            if (leafletMapRef.current) {
+                leafletMapRef.current.remove();
+                leafletMapRef.current = null;
+                markerRef.current = null;
+            }
+        };
+    }, [mapReady]);
 
     /* ── FORM CHANGE ── */
     const handleChange = (e) => {
@@ -76,6 +204,50 @@ const AddRoom = () => {
             setForm({ ...form, room_type: type });
             setCustomType("");
         }
+    };
+
+    /* ── USE CURRENT GPS LOCATION ── */
+    const handleUseLocation = () => {
+        if (!navigator.geolocation) {
+            showToast("Geolocation is not supported by your browser.", "error");
+            return;
+        }
+        setLocationLoading(true);
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+                try {
+                    const res = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+                    );
+                    const data = await res.json();
+                    const address =
+                        data.display_name ||
+                        `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+                    setForm((prev) => ({ ...prev, current_location: address }));
+                    placeMarker(latitude, longitude);
+                    showToast("Location fetched successfully! ✅");
+                } catch {
+                    setForm((prev) => ({
+                        ...prev,
+                        current_location: `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`,
+                    }));
+                    placeMarker(latitude, longitude);
+                    showToast("Location fetched (coordinates only).");
+                } finally {
+                    setLocationLoading(false);
+                }
+            },
+            (err) => {
+                setLocationLoading(false);
+                showToast(
+                    err.code === 1
+                        ? "Location permission denied. Please allow access."
+                        : "Unable to fetch location. Try again.",
+                    "error"
+                );
+            }
+        );
     };
 
     /* ── ADD IMAGES ── */
@@ -107,25 +279,23 @@ const AddRoom = () => {
         setPreview((prev) => prev.filter((_, i) => i !== index));
     };
 
-    /* ── VIDEO HANDLER ── */ // ✅ NEW
+    /* ── VIDEO HANDLER ── */
     const handleVideo = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
         if (file.size > 100 * 1024 * 1024) {
             showToast("Video size must be under 100MB.", "error");
             return;
         }
-
         setVideo(file);
         setVideoPreview(URL.createObjectURL(file));
     };
 
-    /* ── REMOVE VIDEO ── */ // ✅ NEW
+    /* ── REMOVE VIDEO ── */
     const removeVideo = () => {
         setVideo(null);
         setVideoPreview(null);
-        videoInputRef.current.value = ""; // input reset
+        videoInputRef.current.value = "";
     };
 
     /* ── SUBMIT ── */
@@ -150,7 +320,7 @@ const AddRoom = () => {
             formData.set("room_type", roomTypeFinal);
             formData.append("owner_id", user.id);
             images.forEach((img) => formData.append("images", img));
-            if (video) formData.append("video", video); // ✅ NEW
+            if (video) formData.append("video", video);
 
             await API.post("/rooms", formData);
             showToast("Room added successfully! ✅");
@@ -217,7 +387,7 @@ const AddRoom = () => {
     );
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex min-h-screen bg-gray-50 pt-16">
 
             {/* ── TOAST ── */}
             {toast && (
@@ -292,6 +462,8 @@ const AddRoom = () => {
                                 <h2 className="font-semibold text-gray-800">Basic Information</h2>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                                {/* Title */}
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-medium text-gray-600">Room Title *</label>
                                     <input
@@ -304,6 +476,8 @@ const AddRoom = () => {
                                         className="border border-gray-200 p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                                     />
                                 </div>
+
+                                {/* Price */}
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-medium text-gray-600">Price / Month *</label>
                                     <div className="relative">
@@ -319,6 +493,8 @@ const AddRoom = () => {
                                         />
                                     </div>
                                 </div>
+
+                                {/* City */}
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-medium text-gray-600">City</label>
                                     <div className="relative">
@@ -332,6 +508,8 @@ const AddRoom = () => {
                                         />
                                     </div>
                                 </div>
+
+                                {/* Location / Area */}
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-medium text-gray-600">Location / Area *</label>
                                     <div className="relative">
@@ -347,6 +525,120 @@ const AddRoom = () => {
                                         />
                                     </div>
                                 </div>
+
+                                {/* ── Current Location + MAP ── */}
+                                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                                    <label className="text-sm font-medium text-gray-600">
+                                        Current Location
+                                        <span className="ml-1.5 text-xs text-gray-400 font-normal">
+                                            (auto-detect, type manually, or click on map)
+                                        </span>
+                                    </label>
+
+                                    {/* Input + Button Row */}
+                                    <div className="flex gap-2">
+                                        <div className="relative flex-1">
+                                            <Navigation size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                            <input
+                                                type="text"
+                                                name="current_location"
+                                                placeholder="e.g. 21.8234° N, 80.1963° E or full address"
+                                                value={form.current_location}
+                                                onChange={handleChange}
+                                                className="border border-gray-200 p-3 pl-8 rounded-xl text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                                            />
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={handleUseLocation}
+                                            disabled={locationLoading}
+                                            className="flex items-center gap-2 px-4 py-3 bg-blue-50 hover:bg-blue-100 text-blue-600
+                                                       border border-blue-200 rounded-xl text-sm font-medium transition-all
+                                                       disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
+                                        >
+                                            {locationLoading ? (
+                                                <Loader2 size={15} className="animate-spin" />
+                                            ) : (
+                                                <Navigation size={15} />
+                                            )}
+                                            {locationLoading ? "Detecting..." : "Use My Location"}
+                                        </button>
+                                    </div>
+
+                                    {/* MAP CONTAINER */}
+                                    <div className="relative mt-1 rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
+                                        {/* Map tip banner */}
+                                        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-[400] bg-white/90 backdrop-blur-sm
+                                                        text-xs text-gray-600 px-3 py-1.5 rounded-full shadow border border-gray-100
+                                                        flex items-center gap-1.5 pointer-events-none select-none">
+                                            <MapPin size={12} className="text-blue-500" />
+                                            Click on map to pin your location • Drag pin to adjust
+                                        </div>
+
+                                        {/* Leaflet map div */}
+                                        <div
+                                            ref={mapRef}
+                                            style={{ height: "300px", width: "100%", zIndex: 0 }}
+                                        />
+
+                                        {/* Loading overlay before Leaflet loads */}
+                                        {!mapReady && (
+                                            <div className="absolute inset-0 bg-gray-100 flex flex-col items-center justify-center gap-2 z-10">
+                                                <Loader2 size={24} className="animate-spin text-blue-400" />
+                                                <p className="text-xs text-gray-400">Loading map...</p>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Selected address display */}
+                                    {form.current_location && (
+                                        <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-xl px-3 py-2.5 mt-0.5">
+                                            <MapPin size={14} className="text-blue-500 mt-0.5 shrink-0" />
+                                            <p className="text-xs text-blue-700 leading-relaxed">{form.current_location}</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* ── Phone Number ── */}
+                                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                                    <label className="text-sm font-medium text-gray-600">
+                                        Contact Phone Number *
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 border-r border-gray-200 pr-3">
+                                            <Phone size={14} className="text-gray-400" />
+                                            <span className="text-sm text-gray-500 font-medium">+91</span>
+                                        </div>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            placeholder="98765 43210"
+                                            value={form.phone}
+                                            onChange={(e) => {
+                                                const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                                                setForm((prev) => ({ ...prev, phone: val }));
+                                            }}
+                                            required
+                                            maxLength={10}
+                                            className="border border-gray-200 p-3 pl-20 rounded-xl text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                                        />
+                                        <span className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium
+                                            ${form.phone.length === 10 ? "text-green-500" : "text-gray-300"}`}>
+                                            {form.phone.length}/10
+                                        </span>
+                                    </div>
+                                    {form.phone.length > 0 && form.phone.length < 10 && (
+                                        <p className="text-xs text-amber-500 flex items-center gap-1">
+                                            ⚠ Enter a valid 10-digit mobile number
+                                        </p>
+                                    )}
+                                    {form.phone.length === 10 && (
+                                        <p className="text-xs text-green-500 flex items-center gap-1">
+                                            ✓ Valid phone number
+                                        </p>
+                                    )}
+                                </div>
+
                             </div>
                         </div>
 
@@ -494,7 +786,7 @@ const AddRoom = () => {
                             )}
                         </div>
 
-                        {/* ── SECTION 5: VIDEO ── */}  {/* ✅ BILKUL NAYA SECTION */}
+                        {/* ── SECTION 5: VIDEO ── */}
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
                             <div className="flex items-center justify-between mb-5">
                                 <div className="flex items-center gap-2">
@@ -512,8 +804,6 @@ const AddRoom = () => {
                                     </span>
                                 )}
                             </div>
-
-                            {/* Hidden file input */}
                             <input
                                 ref={videoInputRef}
                                 type="file"
@@ -521,8 +811,6 @@ const AddRoom = () => {
                                 onChange={handleVideo}
                                 className="hidden"
                             />
-
-                            {/* Upload area - video nahi hai tab */}
                             {!videoPreview ? (
                                 <div
                                     onClick={() => videoInputRef.current.click()}
@@ -538,7 +826,6 @@ const AddRoom = () => {
                                     </p>
                                 </div>
                             ) : (
-                                /* Video preview - video hai tab */
                                 <div className="relative rounded-2xl overflow-hidden bg-black">
                                     <video
                                         src={videoPreview}
