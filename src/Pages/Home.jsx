@@ -242,13 +242,13 @@ const Home = () => {
         )}
 
         {/* LOAD MORE */}
-        {filteredRooms.length > 8 && (
+        {/* {filteredRooms.length > 8 && (
           <div className="text-center mt-10">
             <button className="px-6 py-3 border rounded-full hover:bg-black hover:text-white transition">
               Load More
             </button>
           </div>
-        )}
+        )} */}
       </section>
 
       {/* ================= WHY CHOOSE US ================= */}

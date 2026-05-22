@@ -9,80 +9,40 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
-/* ── SVG ICONS ── */
-const IconPhone = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-  </svg>
-);
-
-const IconMapPin = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-    <circle cx="12" cy="10" r="3"/>
-  </svg>
-);
-
-const IconHeart = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-  </svg>
-);
-
-const IconVideo = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="23 7 16 12 23 17 23 7"/>
-    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-  </svg>
-);
-
-const IconUser = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-    <circle cx="12" cy="7" r="4"/>
-  </svg>
-);
-
-const IconStar = ({ filled, size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-  </svg>
-);
-
-const IconSend = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="22" y1="2" x2="11" y2="13"/>
-    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-  </svg>
-);
-
-const IconSpinner = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" opacity="0.4"/>
-    <path d="M12 2v4" className="animate-spin" style={{transformOrigin:"center"}}/>
-  </svg>
-);
-
-const IconZoomIn = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-    <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
-  </svg>
-);
-
-const IconHome = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-    <polyline points="9 22 9 12 15 12 15 22"/>
-  </svg>
-);
+import {
+  Heart,
+  Phone,
+  MapPin,
+  Video,
+  Home,
+  CheckCircle,
+  XCircle,
+  Map,
+  User,
+  MessageSquare,
+  AlertTriangle,
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  ZoomIn,
+  Search,
+  Send,
+  Calendar,
+  LogIn,
+} from "lucide-react";
 
 /* ── LIGHTBOX COMPONENT ── */
 const Lightbox = ({ images, startIndex, onClose }) => {
   const [current, setCurrent] = useState(startIndex);
 
-  const goPrev = useCallback(() => setCurrent((i) => (i - 1 + images.length) % images.length), [images.length]);
-  const goNext = useCallback(() => setCurrent((i) => (i + 1) % images.length), [images.length]);
+  const goPrev = useCallback(() => {
+    setCurrent((i) => (i - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  const goNext = useCallback(() => {
+    setCurrent((i) => (i + 1) % images.length);
+  }, [images.length]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -105,40 +65,35 @@ const Lightbox = ({ images, startIndex, onClose }) => {
     >
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 text-white border border-white/30 hover:bg-white/10 rounded-full w-10 h-10 flex items-center justify-center text-lg transition z-10"
+        className="absolute top-4 right-4 text-white bg-white/10 hover:bg-white/25 rounded-full w-10 h-10 flex items-center justify-center transition z-10"
       >
-        ✕
+        <X size={18} />
       </button>
-
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white text-xs border border-white/20 px-3 py-1 rounded-full tracking-wide">
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white text-xs bg-white/10 px-3 py-1 rounded-full tracking-widest">
         {current + 1} / {images.length}
       </div>
-
       {images.length > 1 && (
         <button
           onClick={(e) => { e.stopPropagation(); goPrev(); }}
-          className="absolute left-3 sm:left-6 text-white border border-white/30 hover:bg-white/10 rounded-full w-11 h-11 flex items-center justify-center text-2xl transition z-10"
+          className="absolute left-3 sm:left-6 text-white bg-white/10 hover:bg-white/25 rounded-full w-11 h-11 flex items-center justify-center transition z-10"
         >
-          ‹
+          <ChevronLeft size={22} />
         </button>
       )}
-
       <img
         src={images[current]}
         alt={`fullscreen-${current}`}
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg select-none"
+        className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl select-none"
       />
-
       {images.length > 1 && (
         <button
           onClick={(e) => { e.stopPropagation(); goNext(); }}
-          className="absolute right-3 sm:right-6 text-white border border-white/30 hover:bg-white/10 rounded-full w-11 h-11 flex items-center justify-center text-2xl transition z-10"
+          className="absolute right-3 sm:right-6 text-white bg-white/10 hover:bg-white/25 rounded-full w-11 h-11 flex items-center justify-center transition z-10"
         >
-          ›
+          <ChevronRight size={22} />
         </button>
       )}
-
       {images.length > 1 && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 overflow-x-auto max-w-[90vw] px-2">
           {images.map((img, i) => (
@@ -147,7 +102,7 @@ const Lightbox = ({ images, startIndex, onClose }) => {
               src={img}
               alt={`thumb-lb-${i}`}
               onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
-              className={`h-14 w-20 object-cover rounded cursor-pointer flex-shrink-0 border-2 transition ${
+              className={`h-14 w-20 object-cover rounded-lg cursor-pointer flex-shrink-0 border-2 transition ${
                 i === current ? "border-white opacity-100" : "border-transparent opacity-40 hover:opacity-70"
               }`}
             />
@@ -158,26 +113,115 @@ const Lightbox = ({ images, startIndex, onClose }) => {
   );
 };
 
-/* ── BUTTON VARIANTS ── */
-const BtnPrimary = ({ onClick, disabled, children, className = "" }) => (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    className={`flex items-center justify-center gap-2 bg-gray-900 hover:bg-black disabled:opacity-50 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors ${className}`}
-  >
-    {children}
-  </button>
+/* ── VIDEO PLAYER COMPONENT ── */
+const VideoPlayer = ({ videoUrl, posterUrl }) => {
+  const [videoError, setVideoError] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(true);
+
+  const normalizeVideoUrl = (url) => {
+    if (!url) return null;
+    let normalizedUrl = url;
+    normalizedUrl = normalizedUrl.replace(/\.(mov|MOV)$/, ".mp4");
+    normalizedUrl = normalizedUrl.replace(/\\/g, "/");
+    if (normalizedUrl.startsWith("/uploads/") || normalizedUrl.startsWith("uploads/")) {
+      const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      normalizedUrl = `${baseUrl}/${normalizedUrl.replace(/^\//, "")}`;
+    }
+    return normalizedUrl;
+  };
+
+  const src = normalizeVideoUrl(videoUrl);
+  if (!src) return null;
+
+  if (videoError) {
+    return (
+      <div className="flex flex-col items-center justify-center bg-gray-50 rounded-2xl py-10 text-gray-400 text-sm gap-3 border border-dashed border-gray-200">
+        <AlertTriangle size={32} className="text-gray-300" />
+        <p>Video could not be loaded.</p>
+        <a
+          href={src}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-black underline text-xs font-medium flex items-center gap-1"
+        >
+          <ExternalLink size={12} /> Try opening directly
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative rounded-2xl overflow-hidden bg-black">
+      {videoLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
+          <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+      <video
+        src={src}
+        controls
+        poster={posterUrl}
+        onCanPlay={() => setVideoLoading(false)}
+        onError={() => { setVideoError(true); setVideoLoading(false); }}
+        className="w-full max-h-[460px] object-contain"
+        preload="metadata"
+      >
+        <source src={src} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  );
+};
+
+/* ── STAR RATING DISPLAY ── */
+const StarDisplay = ({ rating }) => (
+  <div className="flex gap-0.5">
+    {[1, 2, 3, 4, 5].map((s) => (
+      <svg
+        key={s}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill={s <= rating ? "#FACC15" : "none"}
+        stroke={s <= rating ? "#FACC15" : "#D1D5DB"}
+        strokeWidth="1.5"
+        className="w-4 h-4"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+      </svg>
+    ))}
+  </div>
 );
 
-const BtnOutline = ({ onClick, disabled, children, className = "" }) => (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    className={`flex items-center justify-center gap-2 bg-white hover:bg-gray-50 disabled:opacity-50 text-gray-900 border border-gray-300 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors ${className}`}
-  >
-    {children}
-  </button>
-);
+/* ── STAR PICKER (interactive) ── */
+const StarPicker = ({ rating, onChange }) => {
+  const [hovered, setHovered] = useState(0);
+  return (
+    <div className="flex gap-1 items-center">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          onClick={() => onChange(star)}
+          onMouseEnter={() => setHovered(star)}
+          onMouseLeave={() => setHovered(0)}
+          className="transition-transform hover:scale-110 focus:outline-none"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill={star <= (hovered || rating) ? "#FACC15" : "none"}
+            stroke={star <= (hovered || rating) ? "#FACC15" : "#9CA3AF"}
+            strokeWidth="1.5"
+            className="w-8 h-8"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+          </svg>
+        </button>
+      ))}
+      <span className="text-sm text-gray-400 ml-1 font-medium">{hovered || rating} / 5</span>
+    </div>
+  );
+};
 
 /* ── MAIN COMPONENT ── */
 const RoomDetails = () => {
@@ -185,6 +229,7 @@ const RoomDetails = () => {
   const navigate = useNavigate();
 
   const [room, setRoom] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
@@ -209,54 +254,70 @@ const RoomDetails = () => {
       const res = await API.get(`/rooms/${id}`);
       setRoom(res.data);
     } catch (error) {
-      console.error("Fetch room error:", error);
       showToast("Failed to load room details.", "error");
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const res = await API.get(`/reviews/${id}`);
+      setReviews(res.data);
+    } catch (error) {
+      console.error("Fetch reviews error:", error);
     }
   };
 
   useEffect(() => {
     fetchRoom();
+    fetchReviews();
   }, [id]);
+
+  const resolveVideoUrl = () => {
+    if (!room) return null;
+    const possibleVideoFields = [
+      room.video_url, room.video, room.videoUrl,
+      room.video_path, room.videoLink, room.video_file,
+    ];
+    const videoUrl = possibleVideoFields.find((f) => f && f.trim() !== "");
+    if (!videoUrl) return null;
+    let normalizedUrl = videoUrl.replace(/\\/g, "/").replace(/\.(mov|MOV)$/, ".mp4");
+    if (normalizedUrl.startsWith("uploads/") || normalizedUrl.startsWith("/uploads/")) {
+      const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      normalizedUrl = `${baseUrl}/${normalizedUrl.replace(/^\//, "")}`;
+    }
+    return normalizedUrl;
+  };
+
+  const resolvedVideoUrl = resolveVideoUrl();
 
   const handleCall = () => {
     if (!room?.owner?.phone) {
-      showToast("Owner ka phone number available nahi hai.", "error");
+      showToast("Owner's phone number is not available.", "error");
       return;
     }
     window.location.href = `tel:${room.owner.phone}`;
   };
 
   const handleLocation = () => {
-    const address = `${room?.location}, ${room?.city}`;
-    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`, "_blank");
+    const query = room?.current_location || `${room?.location}, ${room?.city}`;
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, "_blank");
   };
 
   const submitReview = async () => {
-    if (!token) {
-      showToast("Please login to submit a review.", "error");
-      navigate("/login");
-      return;
-    }
-    if (!comment.trim()) {
-      showToast("Please write a comment before submitting.", "error");
-      return;
-    }
+    if (!token) { showToast("Please login to submit a review.", "error"); navigate("/login"); return; }
+    if (!comment.trim()) { showToast("Please write a comment before submitting.", "error"); return; }
     setReviewLoading(true);
     try {
-      await API.post(`/reviews/${id}`, {
-        rating: Number(rating),
-        comment: comment.trim(),
-      });
-      setComment("");
-      setRating(5);
+      await API.post(`/reviews/${id}`, { rating: Number(rating), comment: comment.trim() });
+      setComment(""); setRating(5);
       showToast("Review submitted successfully!");
+      fetchReviews();
     } catch (error) {
       const msg = error.response?.data?.message;
       if (error.response?.status === 400 && msg === "You have already reviewed this room") {
         showToast("You have already reviewed this room.", "error");
       } else if (error.response?.status === 401) {
-        showToast("Session expired. Please login again.", "error");
-        navigate("/login");
+        showToast("Session expired. Please login again.", "error"); navigate("/login");
       } else {
         showToast(msg || "Failed to submit review.", "error");
       }
@@ -266,11 +327,7 @@ const RoomDetails = () => {
   };
 
   const addWishlist = async () => {
-    if (!token) {
-      showToast("Please login to add to wishlist.", "error");
-      navigate("/login");
-      return;
-    }
+    if (!token) { showToast("Please login to add to wishlist.", "error"); navigate("/login"); return; }
     setWishlistLoading(true);
     try {
       await API.post(`/wishlist/${id}`);
@@ -280,8 +337,7 @@ const RoomDetails = () => {
       if (error.response?.status === 400 && msg === "Room already in wishlist") {
         showToast("Room is already in your wishlist.", "error");
       } else if (error.response?.status === 401) {
-        showToast("Session expired. Please login again.", "error");
-        navigate("/login");
+        showToast("Session expired. Please login again.", "error"); navigate("/login");
       } else {
         showToast(msg || "Failed to add to wishlist.", "error");
       }
@@ -292,41 +348,74 @@ const RoomDetails = () => {
 
   if (!room) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] ">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-gray-400 text-sm">Loading room details...</p>
+          <div className="w-10 h-10 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-gray-400 text-sm tracking-wide">Loading room details...</p>
         </div>
       </div>
     );
   }
 
+  const avgRating = reviews.length
+    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+    : null;
+
   return (
-    <div className="max-w-6xl mx-auto p-4 sm:p-6 pt-36">
-      {/* ── LIGHTBOX ── */}
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 font-sans">
+
+      {/* LIGHTBOX */}
       {lightbox.open && room.images?.length > 0 && (
         <Lightbox images={room.images} startIndex={lightbox.index} onClose={closeLightbox} />
       )}
 
-      {/* ── TOAST ── */}
+      {/* TOAST */}
       {toast && (
-        <div
-          className={`fixed top-5 right-5 z-[999] px-5 py-3 rounded-lg shadow-lg text-white text-sm font-medium transition-all duration-300 ${
-            toast.type === "success" ? "bg-gray-900" : "bg-red-600"
-          }`}
-        >
+        <div className={`fixed top-5 right-5 z-[999] px-5 py-3 rounded-xl shadow-2xl text-white text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+          toast.type === "success" ? "bg-black" : "bg-red-500"
+        }`}>
+          {toast.type === "success"
+            ? <CheckCircle size={15} />
+            : <XCircle size={15} />
+          }
           {toast.message}
         </div>
       )}
 
+      {/* ── TITLE + BADGES ── */}
+      <div className="mb-5">
+        <div className="flex flex-wrap items-center gap-2 mb-1">
+          <span className="bg-black text-white text-[11px] font-semibold uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1">
+            <Home size={11} /> {room.room_type}
+          </span>
+          {room.furnished && (
+            <span className="bg-gray-100 text-gray-600 text-[11px] font-semibold uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1">
+              <CheckCircle size={11} /> Furnished
+            </span>
+          )}
+          {avgRating && (
+            <span className="bg-yellow-400 text-black text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
+                <path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005z" />
+              </svg>
+              {avgRating}
+            </span>
+          )}
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight leading-tight">{room.title}</h1>
+        <p className="text-gray-400 text-sm mt-1 flex items-center gap-1">
+          <MapPin size={13} /> {room.city} · {room.location}
+        </p>
+      </div>
+
       {/* ── MAIN SWIPER ── */}
-      <div className="relative group pt-20">
+      <div className="relative group rounded-2xl overflow-hidden shadow-md">
         <Swiper
           modules={[Navigation, Thumbs, Autoplay]}
           navigation
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          autoplay={{ delay: 3500, disableOnInteraction: false }}
           thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
-          className="rounded-xl overflow-hidden cursor-zoom-in"
+          className="rounded-2xl"
         >
           {room.images?.map((img, index) => (
             <SwiperSlide key={index}>
@@ -334,14 +423,13 @@ const RoomDetails = () => {
                 src={img}
                 alt={`room-${index}`}
                 onClick={() => openLightbox(index)}
-                className="w-full h-[260px] sm:h-[380px] md:h-[460px] object-cover"
+                className="w-full h-[260px] sm:h-[400px] md:h-[480px] object-cover cursor-zoom-in"
               />
             </SwiperSlide>
           ))}
         </Swiper>
-
-        <div className="absolute bottom-3 right-3 z-10 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5 pointer-events-none opacity-0 group-hover:opacity-100 transition">
-          <IconZoomIn /> Click to enlarge
+        <div className="absolute bottom-3 right-3 z-10 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-200 backdrop-blur-sm flex items-center gap-1">
+          <ZoomIn size={12} /> Click to enlarge
         </div>
       </div>
 
@@ -351,7 +439,7 @@ const RoomDetails = () => {
           modules={[Thumbs]}
           onSwiper={setThumbsSwiper}
           spaceBetween={8}
-          slidesPerView={4}
+          slidesPerView={5}
           watchSlidesProgress
           className="mt-3"
         >
@@ -361,7 +449,7 @@ const RoomDetails = () => {
                 src={img}
                 alt={`thumb-${index}`}
                 onClick={() => openLightbox(index)}
-                className="h-20 w-full object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-gray-900 transition"
+                className="h-16 w-full object-cover rounded-xl cursor-zoom-in border-2 border-transparent hover:border-black transition-all duration-200 opacity-80 hover:opacity-100"
               />
             </SwiperSlide>
           ))}
@@ -369,192 +457,236 @@ const RoomDetails = () => {
       )}
 
       {/* ── VIDEO SECTION ── */}
-      {room.video_url && (
-        <div className="mt-6 bg-white rounded-2xl border border-gray-100 p-5">
-          <div className="flex items-center gap-2.5 mb-4">
-            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-gray-700">
-              <IconVideo />
+      {resolvedVideoUrl && (
+        <div className="mt-6 bg-gray-50 rounded-2xl border border-gray-100 p-5">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-9 h-9 bg-black rounded-xl flex items-center justify-center">
+              <Video size={16} className="text-white" />
             </div>
             <div>
-              <h2 className="font-semibold text-gray-900 text-sm">Room Tour Video</h2>
+              <h2 className="font-bold text-gray-900 text-sm tracking-tight">Room Tour Video</h2>
               <p className="text-xs text-gray-400">Watch the room walkthrough</p>
             </div>
           </div>
-          <video
-            src={room.video_url.replace(".mov", ".mp4").replace(".MOV", ".mp4")}
-            controls
-            poster={room.images?.[0]}
-            className="w-full rounded-xl max-h-[460px] bg-black object-contain"
-          />
+          <VideoPlayer videoUrl={resolvedVideoUrl} posterUrl={room.images?.[0]} />
         </div>
       )}
 
-      {/* ── ROOM INFO + OWNER ── */}
-      <div className="grid md:grid-cols-2 gap-8 mt-8">
-        {/* Left: Room Info */}
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{room.title}</h1>
-          <p className="text-gray-500 mt-2 text-sm flex items-center gap-1.5">
-            <IconMapPin />
-            {room.city} · {room.location}
-          </p>
-          <p className="text-gray-900 text-2xl font-bold mt-3">
-            ₹{room.price?.toLocaleString()}
-            <span className="text-base font-normal text-gray-400 ml-1">/ month</span>
-          </p>
+      {/* ── ROOM INFO + OWNER CARD ── */}
+      <div className="grid md:grid-cols-5 gap-6 mt-8">
 
-          <div className="mt-5 space-y-2 text-sm text-gray-700">
-            <p>
-              <span className="text-gray-400 font-medium">Room Type</span>
-              <span className="mx-2 text-gray-200">|</span>
-              {room.room_type}
-            </p>
-            <p>
-              <span className="text-gray-400 font-medium">Furnished</span>
-              <span className="mx-2 text-gray-200">|</span>
-              {room.furnished ? "Yes" : "No"}
-            </p>
+        {/* LEFT: Info */}
+        <div className="md:col-span-3 space-y-5">
+
+          {/* Price */}
+          <div className="flex items-end gap-2">
+            <span className="text-3xl font-black text-gray-900 tracking-tight">
+              ₹{room.price?.toLocaleString()}
+            </span>
+            <span className="text-gray-400 text-sm mb-1 font-medium">/ month</span>
           </div>
 
-          <p className="mt-4 text-gray-600 text-sm leading-relaxed">{room.description}</p>
+          {/* Quick facts */}
+          <div className="flex flex-wrap gap-2">
+            <div className="flex items-center gap-1.5 bg-gray-100 rounded-xl px-3 py-2 text-sm font-medium text-gray-700">
+              <Home size={14} /> {room.room_type}
+            </div>
+            <div className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium ${room.furnished ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+              {room.furnished
+                ? <><CheckCircle size={14} /> Furnished</>
+                : <><XCircle size={14} /> Unfurnished</>
+              }
+            </div>
+            {room.current_location && (
+              <div className="flex items-center gap-1.5 bg-blue-50 text-blue-700 rounded-xl px-3 py-2 text-sm font-medium max-w-xs truncate">
+                <Map size={14} className="shrink-0" />
+                <span className="truncate">{room.current_location}</span>
+              </div>
+            )}
+          </div>
 
-          {/* ── ACTION BUTTONS ── */}
-          <div className="mt-6 flex flex-wrap gap-2.5">
-            <BtnPrimary onClick={addWishlist} disabled={wishlistLoading}>
+          {/* Description */}
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">About this room</h3>
+            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">{room.description}</p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3 pt-1">
+
+            {/* Wishlist */}
+            <button
+              onClick={addWishlist}
+              disabled={wishlistLoading}
+              className="flex items-center gap-2 bg-black hover:bg-gray-800 disabled:opacity-50 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-sm"
+            >
               {wishlistLoading
                 ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                : <IconHeart />}
-              {wishlistLoading ? "Adding..." : "Save"}
-            </BtnPrimary>
+                : <Heart size={15} fill="currentColor" className="text-red-400" />
+              }
+              {wishlistLoading ? "Adding..." : "Wishlist"}
+            </button>
 
-            <BtnOutline onClick={handleCall}>
-              <IconPhone />
-              {room?.owner?.phone ? room.owner.phone : "Call Owner"}
-            </BtnOutline>
+            {/* Call */}
+            <button
+              onClick={handleCall}
+              className="flex items-center gap-2 bg-black hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-sm"
+            >
+              <Phone size={15} />
+              {room?.owner?.phone || "Call Owner"}
+            </button>
 
-            <BtnOutline onClick={handleLocation}>
-              <IconMapPin />
-              View on Map
-            </BtnOutline>
+            {/* Map */}
+            <button
+              onClick={handleLocation}
+              className="flex items-center gap-2 bg-black hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-sm"
+            >
+              <MapPin size={15} /> View on Map
+            </button>
           </div>
         </div>
 
-        {/* Right: Owner Card */}
+        {/* RIGHT: Owner Card */}
         {room?.owner && (
-          <div className="border border-gray-200 rounded-xl p-5 h-fit bg-white">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <IconHome />
-              Owner Details
-            </h3>
-
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-11 h-11 bg-gray-900 rounded-full flex items-center justify-center text-white font-semibold text-base">
-                {room.owner.name?.charAt(0).toUpperCase()}
+          <div className="md:col-span-2">
+            <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm sticky top-6">
+              <p className="text-[11px] uppercase tracking-widest text-gray-400 font-bold mb-4">Property Owner</p>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center text-white font-bold text-lg">
+                  {room.owner.name?.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="font-bold text-gray-900 text-sm">{room.owner.name}</p>
+                  <p className="text-xs text-gray-400">Listed owner</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-gray-900 text-sm">{room.owner.name}</p>
-                <p className="text-xs text-gray-400">Property Owner</p>
+              <div className="space-y-2 mb-5 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <Phone size={14} className="text-gray-400 shrink-0" />
+                  <span>{room.owner.phone || "Not available"}</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin size={14} className="text-gray-400 shrink-0 mt-0.5" />
+                  <span>{room.location}, {room.city}</span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={handleCall}
+                  className="w-full bg-black hover:bg-gray-800 text-white py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <Phone size={14} /> Call Owner
+                </button>
+                <button
+                  onClick={handleLocation}
+                  className="w-full border border-gray-200 hover:border-black hover:bg-gray-50 text-gray-800 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <MapPin size={14} /> View Location
+                </button>
               </div>
             </div>
+          </div>
+        )}
+      </div>
 
-            <div className="space-y-2.5 mb-5">
-              <div className="flex items-center gap-2.5 text-sm text-gray-600">
-                <IconPhone />
-                <span>{room.owner.phone || "Not available"}</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-gray-600">
-                <IconMapPin />
-                <span>{room.location}, {room.city}</span>
-              </div>
+      {/* ── REVIEWS SECTION ── */}
+      <div className="mt-14">
+        <div className="flex items-end gap-4 mb-6">
+          <h2 className="text-xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2">
+            <MessageSquare size={20} /> Reviews
+          </h2>
+          {reviews.length > 0 && (
+            <div className="flex items-center gap-2 mb-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FACC15" className="w-4 h-4">
+                <path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005z" />
+              </svg>
+              <span className="text-gray-800 font-bold text-sm">{avgRating}</span>
+              <span className="text-gray-400 text-sm">({reviews.length} review{reviews.length !== 1 ? "s" : ""})</span>
             </div>
+          )}
+        </div>
 
-            <div className="flex flex-col gap-2">
-              <BtnPrimary onClick={handleCall} className="w-full">
-                <IconPhone />
-                Call Owner
-              </BtnPrimary>
-              <BtnOutline onClick={handleLocation} className="w-full">
-                <IconMapPin />
-                View Location on Map
-              </BtnOutline>
-            </div>
+        {reviews.length === 0 ? (
+          <div className="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+            <MessageSquare size={36} className="text-gray-200 mx-auto mb-3" />
+            <p className="text-gray-400 text-sm">No reviews yet. Be the first to review!</p>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 gap-4">
+            {reviews.map((rev) => (
+              <div
+                key={rev.id}
+                className="bg-white border border-gray-100 rounded-2xl p-4 hover:shadow-md transition-all duration-200"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center text-gray-500">
+                      <User size={15} />
+                    </div>
+                    <p className="font-semibold text-gray-800 text-sm">{rev.users?.name || "Anonymous"}</p>
+                  </div>
+                  <StarDisplay rating={rev.rating} />
+                </div>
+                <p className="text-gray-500 text-sm leading-relaxed">{rev.comment}</p>
+                <p className="text-xs text-gray-300 mt-2 flex items-center gap-1">
+                  <Calendar size={11} />
+                  {new Date(rev.created_at).toLocaleDateString("en-IN", {
+                    day: "numeric", month: "short", year: "numeric",
+                  })}
+                </p>
+              </div>
+            ))}
           </div>
         )}
       </div>
 
       {/* ── WRITE A REVIEW ── */}
-      <div className="mt-12">
-        {user && token ? (
-          <div className="border border-gray-200 rounded-xl p-5 sm:p-6 bg-white">
-            {/* Header */}
-            <div className="flex items-center gap-2 mb-5">
-              <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center text-white">
-                <IconStar filled size={14} />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 text-sm">Write a Review</h3>
-                <p className="text-xs text-gray-400">Share your experience about this room</p>
-              </div>
-            </div>
+      {user && token ? (
+        <div className="mt-8 bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+          <h3 className="font-extrabold text-gray-900 text-base tracking-tight mb-5 flex items-center gap-2">
+            <Search size={16} /> Write a Review
+          </h3>
 
-            {/* Star Rating */}
-            <div className="mb-4">
-              <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide font-medium">Your Rating</p>
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    onClick={() => setRating(star)}
-                    className={`transition-transform hover:scale-110 ${
-                      star <= rating ? "text-yellow-400" : "text-gray-200"
-                    }`}
-                  >
-                    <IconStar filled={star <= rating} size={26} />
-                  </button>
-                ))}
-                <span className="text-xs text-gray-400 ml-2 font-medium">{rating} / 5</span>
-              </div>
-            </div>
-
-            {/* Textarea */}
-            <div className="mb-4">
-              <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide font-medium">Your Comment</p>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="What did you like or dislike about this room?"
-                rows={4}
-                className="border border-gray-200 w-full p-3 rounded-lg text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent resize-none bg-white transition"
-              />
-              <p className="text-xs text-gray-300 mt-1 text-right">{comment.length} characters</p>
-            </div>
-
-            {/* Submit */}
-            <BtnPrimary
-              onClick={submitReview}
-              disabled={reviewLoading || !comment.trim()}
-            >
-              {reviewLoading
-                ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                : <IconSend />}
-              {reviewLoading ? "Submitting..." : "Submit Review"}
-            </BtnPrimary>
+          <div className="mb-5">
+            <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2">Your Rating</p>
+            <StarPicker rating={rating} onChange={setRating} />
           </div>
-        ) : (
-          <div className="border border-gray-200 rounded-xl p-6 bg-white text-center">
-            <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-400">
-              <IconUser />
-            </div>
-            <p className="text-gray-500 text-sm">
-              Please{" "}
-              <a href="/login" className="text-gray-900 underline underline-offset-2 font-medium hover:text-black">
-                login
-              </a>{" "}
-              to write a review or save to wishlist.
-            </p>
+
+          <div className="mb-4">
+            <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2">Your Experience</p>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Share your experience about this room..."
+              rows={4}
+              className="w-full border border-gray-200 focus:border-black focus:ring-0 focus:outline-none rounded-xl p-4 text-sm text-gray-700 placeholder-gray-300 resize-none transition-all duration-200 bg-gray-50 focus:bg-white"
+            />
           </div>
-        )}
-      </div>
+
+          <button
+            onClick={submitReview}
+            disabled={reviewLoading || !comment.trim()}
+            className="flex items-center gap-2 bg-black hover:bg-gray-800 disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
+          >
+            {reviewLoading
+              ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              : <Send size={14} />
+            }
+            {reviewLoading ? "Submitting..." : "Submit Review"}
+          </button>
+        </div>
+      ) : (
+        <div className="mt-8 bg-gray-50 border border-dashed border-gray-200 rounded-2xl p-6 text-center">
+          <p className="text-gray-400 text-sm flex items-center justify-center gap-1.5">
+            <LogIn size={14} />
+            Please{" "}
+            <a href="/login" className="text-black underline font-semibold underline-offset-2">
+              login
+            </a>{" "}
+            to write a review or add to wishlist.
+          </p>
+        </div>
+      )}
     </div>
   );
 };

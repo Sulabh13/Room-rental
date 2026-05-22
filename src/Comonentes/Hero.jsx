@@ -104,14 +104,14 @@ const Hero = () => {
 
       <div className="relative z-10 max-w-5xl mx-auto px-5 py-20 w-full">
         {/* Badge */}
-        <div className={`${styles.animBadge} flex justify-center mb-6`}>
+        {/* <div className={`${styles.animBadge} flex justify-center mb-6`}>
           <span className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-400/35 text-amber-300 text-xs font-semibold uppercase tracking-[0.25em] px-5 py-2 rounded-full">
             <span
               className={`${styles.pulseDot} w-1.5 h-1.5 bg-amber-400 inline-block`}
             ></span>
             India's Trusted Room Rental Platform
           </span>
-        </div>
+        </div> */}
 
         {/* Heading */}
         <div className={`${styles.animTitle} text-center mb-4 `}>

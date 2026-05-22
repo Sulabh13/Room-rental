@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Menu, X, Home, BedDouble, Phone } from "lucide-react";
 import ProfileCard from "./ProfileCard";
@@ -9,10 +9,8 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // Sirf Home page "/" par transparent navbar dikhao
-  // Baaki sabhi pages par hamesha solid/scrolled style
-  // const isHomePage = location.pathname === "/";
   const isHomePage = location.pathname === "/" || location.pathname === "/contact";
 
   const checkLogin = () => {
@@ -32,12 +30,11 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    // Route change hone par turant scroll check karo
     setScrolled(window.scrollY > 20);
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [location.pathname]); // location change par bhi re-run
+  }, [location.pathname]);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "unset";
@@ -45,6 +42,16 @@ const Navbar = () => {
       document.body.style.overflow = "unset";
     };
   }, [menuOpen]);
+
+  const handleListRoom = (e) => {
+    e.preventDefault();
+    if (isLoggedIn) {
+      navigate("/list-room");
+    } else {
+      navigate("/login", { state: { redirect: "/list-room" } });
+    }
+    setMenuOpen(false);
+  };
 
   const navLinks = [
     { to: "/", label: "Home", icon: Home },
@@ -60,8 +67,6 @@ const Navbar = () => {
       {/* ── MAIN NAV ── */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
-          // Home page pe sirf scroll hone par solid bano
-          // Baaki pages par HAMESHA solid raho
           !isHomePage || scrolled ? styles.navWrapScrolled : styles.navWrapTop
         }`}
       >
@@ -77,7 +82,7 @@ const Navbar = () => {
             <span className="text-orange-500">Finder</span>
           </Link>
 
-          {/* DESKTOP LINKS — floating glass pill */}
+          {/* DESKTOP LINKS */}
           <ul className={`hidden md:flex items-center gap-1 list-none m-0 ${styles.navPill}`}>
             {navLinks.map(({ to, label }) => (
               <li key={to}>
@@ -99,12 +104,12 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-3">
             {!isLoggedIn ? (
               <>
-                <Link
-                  to="/list-room"
-                  className="no-underline text-[0.85rem] font-medium text-white/70 px-[0.85rem] py-[0.45rem] rounded-lg border border-white/15 transition-all duration-200 hover:text-white hover:border-white/40 hover:bg-white/[0.05]"
+                <button
+                  onClick={handleListRoom}
+                  className="text-[0.85rem] font-medium text-white/70 px-[0.85rem] py-[0.45rem] rounded-lg border border-white/15 transition-all duration-200 hover:text-white hover:border-white/40 hover:bg-white/[0.05] cursor-pointer bg-transparent"
                 >
                   List Your Room
-                </Link>
+                </button>
                 <Link
                   to="/login"
                   className="no-underline text-sm font-semibold text-white bg-orange-500 px-5 py-2 rounded-[9px] transition-all duration-200 shadow-[0_2px_12px_rgba(249,115,22,0.35)] tracking-[0.01em] hover:bg-[#ea6d0e] hover:shadow-[0_4px_20px_rgba(249,115,22,0.5)] hover:-translate-y-px"
@@ -113,6 +118,7 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
+              // ✅ Logged in: sirf ProfileCard, no "List Your Room"
               <ProfileCard inDrawer={false} onClose={() => setMenuOpen(false)} />
             )}
           </div>
@@ -219,15 +225,15 @@ const Navbar = () => {
               >
                 Login / Sign Up
               </Link>
-              <Link
-                to="/list-room"
-                onClick={() => setMenuOpen(false)}
-                className="block no-underline text-center bg-white/[0.06] text-white/70 font-medium text-[0.875rem] py-3 rounded-xl border border-white/10 transition-all duration-200 hover:bg-white/10 hover:text-white"
+              <button
+                onClick={handleListRoom}
+                className="block w-full text-center bg-white/[0.06] text-white/70 font-medium text-[0.875rem] py-3 rounded-xl border border-white/10 transition-all duration-200 hover:bg-white/10 hover:text-white cursor-pointer"
               >
                 List Your Room
-              </Link>
+              </button>
             </>
           ) : (
+            // ✅ Logged in: sirf ProfileCard, no "List Your Room"
             <ProfileCard inDrawer={true} onClose={() => setMenuOpen(false)} />
           )}
         </div>
