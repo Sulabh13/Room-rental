@@ -4,7 +4,7 @@ import Home from "../Pages/Home";
 import Rooms from "../Pages/Rooms";
 import Contact from "../Pages/Contact";
 
-import Login from "../Comonentes/Login";5
+import Login from "../Comonentes/Login";
 import Signup from "../Comonentes/Signup";
 
 import RoomDetails from "../Pages/RoomDetails";

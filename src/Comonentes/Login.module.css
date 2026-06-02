@@ -537,6 +537,14 @@
   transform: scale(1.3);
 }
 
+.googleBtnWrap {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0 20px 0;
+  opacity: 0;
+  animation: fadeSlide 0.45s ease 0.68s forwards;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 480px) {
   .h1 { font-size: 1.65rem; }

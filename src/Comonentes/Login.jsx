@@ -3,6 +3,7 @@ import API from "../api/axios";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, ChevronRight, Loader2 } from "lucide-react";
 import styles from "./Login.module.css";
+import { GoogleLogin } from "@react-oauth/google";
 
 // ── Reviews data (rotate automatically) ──────────────────────────────────────
 const REVIEWS = [
@@ -93,6 +94,35 @@ function Login() {
       }
     } catch (err) {
       setError(err.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await API.post("/auth/google-login", {
+        credential: credentialResponse.credential,
+        role: formData.role,
+      });
+      const { accessToken, refreshToken, user } = res.data;
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("role", user.role);
+      window.dispatchEvent(new Event("loginStateChange"));
+      const redirectTo = location.state?.redirect;
+      if (redirectTo) {
+        navigate(redirectTo);
+      } else if (user.role === "owner") {
+        navigate("/owner-dashboard");
+      } else {
+        navigate("/wishlist");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Google Sign In Failed");
     } finally {
       setLoading(false);
     }
@@ -292,6 +322,21 @@ function Login() {
               )}
             </button>
           </form>
+
+          <div className={styles.divider}>
+            <div className={styles.divLine} />
+            <span className={styles.divTxt}>Or sign in with</span>
+            <div className={styles.divLine} />
+          </div>
+
+          <div className={styles.googleBtnWrap}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => {
+                setError("Google Sign In Failed. Please try again.");
+              }}
+            />
+          </div>
 
           <div className={styles.divider}>
             <div className={styles.divLine} />

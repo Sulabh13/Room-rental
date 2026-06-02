@@ -14,6 +14,7 @@ const App = () => {
 
       <Navbar />
       <ScrollToTop />
+      <AppRoutes />
 
     </>
 
