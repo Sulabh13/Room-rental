@@ -7,7 +7,7 @@ import { MdEmail } from "react-icons/md";
 const Footer = () => {
   return (
     <footer style={{ fontFamily: "'DM Sans', sans-serif" }} className="relative border-t border-[#e2e0d8] overflow-hidden">
-      
+
       {/* BLURRED BACKGROUND */}
       <div className="absolute inset-0 bg-[#f9f8f4]/80 backdrop-blur-xl z-0" />
 
@@ -73,11 +73,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-[13px] text-[#6a6a64]">
                 <span><IoCallSharp />
-</span> +91 9876543210
+                </span> +91 9876543210
               </li>
               <li className="flex items-center gap-2 text-[13px] text-[#6a6a64]">
                 <span><MdEmail />
-</span> support@roomfinder.com
+                </span> support@roomfinder.com
               </li>
             </ul>
           </div>

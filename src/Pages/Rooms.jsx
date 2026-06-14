@@ -2,11 +2,20 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import API from "../api/axios";
 import { Link } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { MapPin, Heart, BedDouble, IndianRupee } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
 
 const roomTypes = [
-  "single", "double", "family", "1bhk", "2bhk",
-  "3bhk", "pg", "hostel", "boy", "girl",
+  "single",
+  "double",
+  "family",
+  "1bhk",
+  "2bhk",
+  "3bhk",
+  "pg",
+  "hostel",
+  "boy",
+  "girl",
 ];
 
 const Rooms = () => {
@@ -16,6 +25,7 @@ const Rooms = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [wishlistIds, setWishlistIds] = useState([]);
 
   const [filters, setFilters] = useState({
     city: searchParams.get("city") || "",
@@ -44,6 +54,9 @@ const Rooms = () => {
     try {
       const res = await API.get("/rooms", { params: buildParams(pageNumber) });
       const data = res.data.rooms || [];
+
+      console.log("First Room:", data[0]);
+
       if (reset || pageNumber === 1) {
         setRooms(data);
       } else {
@@ -55,6 +68,23 @@ const Rooms = () => {
     } finally {
       setLoading(false);
       isFetchingRef.current = false;
+    }
+  };
+
+  // wishlist
+  const fetchWishlist = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    try {
+      const res = await API.get("/wishlist");
+
+      const roomIds = res.data.map((item) => item.roomId);
+
+      setWishlistIds(roomIds);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -73,7 +103,9 @@ const Rooms = () => {
   useEffect(() => {
     setPage(1);
     setHasMore(true);
+
     fetchRooms(1, true);
+    fetchWishlist();
   }, [searchParams]);
 
   // ─── IntersectionObserver — auto-load next page ──────────────────────────────
@@ -84,7 +116,7 @@ const Rooms = () => {
         setPage((prev) => prev + 1);
       }
     },
-    [hasMore, loading]
+    [hasMore, loading],
   );
 
   useEffect(() => {
@@ -101,6 +133,39 @@ const Rooms = () => {
   useEffect(() => {
     if (page > 1) fetchRooms(page);
   }, [page]);
+
+  // wishlist
+  const toggleWishlist = async (e, roomId) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("Please login first");
+      return;
+    }
+
+    try {
+      if (wishlistIds.includes(roomId)) {
+        await API.delete(`/wishlist/${roomId}`);
+
+        setWishlistIds((prev) => prev.filter((id) => id !== roomId));
+
+        toast.success("💔 Removed from Wishlist");
+      } else {
+        await API.post(`/wishlist/${roomId}`);
+
+        setWishlistIds((prev) => [...prev, roomId]);
+
+        toast.success("❤️ Added to Wishlist");
+      }
+    } catch (error) {
+      console.log(error);
+
+      toast.error(error.response?.data?.message || "Wishlist operation failed");
+    }
+  };
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -122,18 +187,30 @@ const Rooms = () => {
     setPage(1);
     setHasMore(true);
   };
+  // wishlist
+  // const [wishlist, setWishlist] = useState(() => {
+  //   const saved = localStorage.getItem("roomWishlist");
+  //   return saved ? JSON.parse(saved) : [];
+  // });
 
   if (loading && rooms.length === 0) {
     return <div className="p-20 text-center text-lg">Loading Rooms...</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-
+    <div className="min-h-screen bg-gray-100 p-14">
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 2000,
+        }}
+      />
       {/* ── Heading + Filter — ek hi line mein ── */}
       <div className="flex items-center gap-4 mb-4 mt-14 flex-wrap">
         {/* Heading */}
-        <h1 className="text-2xl font-bold whitespace-nowrap">Available Rooms</h1>
+        <h1 className="text-2xl font-bold whitespace-nowrap">
+          Available Rooms
+        </h1>
 
         {/* Filter bar — grows to fill remaining space */}
         <div className="flex flex-1 gap-3 flex-wrap">
@@ -161,7 +238,9 @@ const Rooms = () => {
           >
             <option value="">Room Type</option>
             {roomTypes.map((type) => (
-              <option key={type} value={type}>{type}</option>
+              <option key={type} value={type}>
+                {type}
+              </option>
             ))}
           </select>
 
@@ -209,74 +288,90 @@ const Rooms = () => {
 
       {/* ── Room Grid ── */}
       {rooms.length === 0 ? (
-        <div className="text-center text-gray-500 text-lg">Room Not Available</div>
+        <div className="text-center text-gray-500 text-lg">
+          Room Not Available
+        </div>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
           {rooms.map((room) => (
-
             <Link
               key={room.id}
               to={`/room/${room.id}`}
-              className="bg-white rounded-xl shadow hover:shadow-xl transition overflow-hidden"
+              className=" bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 "
             >
-              <img
-                src={room.images?.[0] || "/no-image.jpg"}
-                alt="room"
-                className="w-full h-48 object-cover"
-              />
+              <div className="relative">
+                <img
+                  src={room.images?.[0] || "/no-image.jpg"}
+                  alt={room.title}
+                  className="w-full h-36 object-cover"
+                />
+
+                <button
+                  onClick={(e) => toggleWishlist(e, room.id)}
+                  className=" absolute top-3 right-3 bg-white p-2 rounded-full shadow-lg hover:scale-110 transition "
+                >
+                  <Heart
+                    size={20}
+                    className={
+                      wishlistIds.includes(room.id)
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-400"
+                    }
+                  />
+                </button>
+              </div>
 
               <div className="p-4">
+                <div className="flex justify-between items-center">
+                  <span className=" bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full">
+                    {room.room_type}
+                  </span>
 
-                <span className="text-xs bg-gray-200 px-3 py-1 rounded-full">
-                  {room.room_type}
-                </span>
+                  {room.furnished && (
+                    <span className=" bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full ">
+                      Furnished
+                    </span>
+                  )}
+                </div>
 
-                <h2 className="text-lg font-semibold mt-2">
-                  {room.title}
-                </h2>
+                <h2 className="text-lg font-bold mt-3">{room.title}</h2>
 
-                <p className="text-gray-500 flex items-center gap-1 text-sm mt-1">
+                <p className=" flex items-center gap-1 text-gray-500 mt-2 text-sm ">
                   <MapPin size={14} />
-                  {room.city} • {room.location}
+                  {room.city}, {room.location}
                 </p>
 
-                <p className="font-bold text-lg mt-2">
-                  ₹{room.price} / month
-                </p>
+                <div className=" flex items-center gap-1 mt-3">
+                  <IndianRupee size={18} />
+                  <span className="text-2xl font-bold">{room.price}</span>
+                </div>
 
-                <span className="mt-3 inline-block text-blue-600 text-sm font-medium">
-                  View Details →
-                </span>
-
+                <button className=" mt-4 w-full bg-black text-white py-2.5 rounded-xl hover:bg-gray-800 transition">
+                  View Details
+                </button>
               </div>
             </Link>
-
           ))}
         </div>
-      )
-      }
+      )}
 
       {/* ── Infinite scroll sentinel ── */}
       <div ref={sentinelRef} className="h-10" />
 
       {/* Loading indicator while fetching next page */}
-      {
-        loading && rooms.length > 0 && (
-          <div className="flex justify-center py-6">
-            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          </div>
-        )
-      }
+      {loading && rooms.length > 0 && (
+        <div className="flex justify-center py-6">
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
 
       {/* End of results */}
-      {
-        !hasMore && rooms.length > 0 && (
-          <p className="text-center text-gray-400 text-sm py-6">
-            — Sab rooms dekh liye —
-          </p>
-        )
-      }
-    </div >
+      {!hasMore && rooms.length > 0 && (
+        <p className="text-center text-gray-400 text-sm py-6">
+          — Sab rooms dekh liye —
+        </p>
+      )}
+    </div>
   );
 };
 

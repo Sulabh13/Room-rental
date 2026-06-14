@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import API from "../api/axios";
 import Hero from "../Comonentes/Hero";
+import RoomCard from "../Comonentes/RoomCard";
 
 const locations = [
   "All",
@@ -131,35 +132,35 @@ const Home = () => {
 
   /* ================= CARD ================= */
 
-  const RoomCard = ({ room }) => {
-    const price = Number(room.price) || 0;
-    return (
-      <div
-        onClick={() => navigate(`/room/${room.id}`)}
-        className="bg-white rounded-2xl overflow-hidden cursor-pointer group border hover:shadow-xl transition"
-      >
-        <div className="h-48 overflow-hidden">
-          <img
-            src={room.images?.[0] || "/no-image.jpg"}
-            alt="room"
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-          />
-        </div>
-        <div className="p-4">
-          <p className="text-xs text-gray-400 mb-1">
-            📍 {room.location || "Location"}
-          </p>
-          <h3 className="font-semibold text-lg truncate">
-            {room.title || "Room"}
-          </h3>
-          <p className="text-2xl font-bold mt-2">
-            ₹{price}
-            <span className="text-sm text-gray-400 font-normal">/month</span>
-          </p>
-        </div>
-      </div>
-    );
-  };
+  // const RoomCard = ({ room }) => {
+  //   const price = Number(room.price) || 0;
+  //   return (
+  //     <div
+  //       onClick={() => navigate(`/room/${room.id}`)}
+  //       className="bg-white rounded-2xl overflow-hidden cursor-pointer group border hover:shadow-xl transition"
+  //     >
+  //       <div className="h-48 overflow-hidden">
+  //         <img
+  //           src={room.images?.[0] || "/no-image.jpg"}
+  //           alt="room"
+  //           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+  //         />
+  //       </div>
+  //       <div className="p-4">
+  //         <p className="text-xs text-gray-400 mb-1">
+  //           📍 {room.location || "Location"}
+  //         </p>
+  //         <h3 className="font-semibold text-lg truncate">
+  //           {room.title || "Room"}
+  //         </h3>
+  //         <p className="text-2xl font-bold mt-2">
+  //           ₹{price}
+  //           <span className="text-sm text-gray-400 font-normal">/month</span>
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   /* ================= UI ================= */
 
@@ -176,7 +177,7 @@ const Home = () => {
             Browse by Location
           </p>
           <h2 className="text-4xl font-light">
-            Room Collection 
+            Room Collection
           </h2>
         </div>
 
@@ -211,11 +212,10 @@ const Home = () => {
               key={loc}
               onClick={() => handleTab(loc)}
               className={`px-5 py-2 rounded-full text-sm border transition
-              ${
-                activeTab === loc && !searchInfo
+              ${activeTab === loc && !searchInfo
                   ? "bg-black text-white border-black"
                   : "bg-white text-gray-600 hover:bg-gray-100"
-              }`}
+                }`}
             >
               {loc}
             </button>
@@ -251,9 +251,7 @@ const Home = () => {
         )} */}
       </section>
 
-      {/* ================= WHY CHOOSE US ================= */}
 
-      
     </div>
   );
 };

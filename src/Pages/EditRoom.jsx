@@ -113,11 +113,11 @@ const EditRoom = () => {
         <h2 className="text-3xl font-bold mb-6">Update Room</h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <input name="title" value={form.title} onChange={handleChange} placeholder="Title" className="w-full border p-3 rounded-xl"/>
-          <textarea name="description" rows={4} value={form.description} onChange={handleChange} placeholder="Description" className="w-full border p-3 rounded-xl"/>
-          <input type="number" name="price" value={form.price} onChange={handleChange} placeholder="Price" className="w-full border p-3 rounded-xl"/>
-          <input name="city" value={form.city} onChange={handleChange} placeholder="City" className="w-full border p-3 rounded-xl"/>
-          <input name="location" value={form.location} onChange={handleChange} placeholder="Location" className="w-full border p-3 rounded-xl"/>
+          <input name="title" value={form.title} onChange={handleChange} placeholder="Title" className="w-full border p-3 rounded-xl" />
+          <textarea name="description" rows={4} value={form.description} onChange={handleChange} placeholder="Description" className="w-full border p-3 rounded-xl" />
+          <input type="number" name="price" value={form.price} onChange={handleChange} placeholder="Price" className="w-full border p-3 rounded-xl" />
+          <input name="city" value={form.city} onChange={handleChange} placeholder="City" className="w-full border p-3 rounded-xl" />
+          <input name="location" value={form.location} onChange={handleChange} placeholder="Location" className="w-full border p-3 rounded-xl" />
 
           <select name="room_type" value={form.room_type} onChange={handleChange} className="w-full border p-3 rounded-xl">
             <option value="">Select Room Type</option>
@@ -129,14 +129,14 @@ const EditRoom = () => {
           </select>
 
           <label className="flex gap-3 items-center">
-            <input type="checkbox" name="furnished" checked={form.furnished} onChange={handleChange}/>
+            <input type="checkbox" name="furnished" checked={form.furnished} onChange={handleChange} />
             Furnished
           </label>
 
-          <input type="file" multiple accept="image/*" onChange={handleImages}/>
-          <input ref={videoInputRef} type="file" accept="video/*" onChange={handleVideo}/>
+          <input type="file" multiple accept="image/*" onChange={handleImages} />
+          <input ref={videoInputRef} type="file" accept="video/*" onChange={handleVideo} />
 
-          {videoPreview && <video src={videoPreview} controls className="w-full mt-4 rounded-xl"/>}
+          {videoPreview && <video src={videoPreview} controls className="w-full mt-4 rounded-xl" />}
 
           <button disabled={loading} className="bg-blue-600 text-white px-6 py-3 rounded-xl w-full">
             {loading ? "Updating..." : "Update Room"}

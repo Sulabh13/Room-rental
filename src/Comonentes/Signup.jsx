@@ -13,17 +13,17 @@ const STRENGTH_COLOR = ["", "#ef4444", "#f97316", "#22c55e"];
 
 function getStrength(pwd) {
   if (pwd.length === 0) return 0;
-  if (pwd.length < 6)  return 1;
+  if (pwd.length < 6) return 1;
   if (pwd.length < 10) return 2;
   return 3;
 }
 
 /* ── Step data ── */
 const STEPS = [
-  { n: "1", title: "Create your account",    desc: "Fill in your basic details — takes less than 2 minutes." },
-  { n: "2", title: "Browse listings",         desc: "Explore verified rooms across your city with photos and pricing." },
-  { n: "3", title: "Connect with owners",     desc: "Chat directly and schedule visits at your convenience." },
-  { n: "4", title: "Move in!",               desc: "Confirm your room and settle into your new home." },
+  { n: "1", title: "Create your account", desc: "Fill in your basic details — takes less than 2 minutes." },
+  { n: "2", title: "Browse listings", desc: "Explore verified rooms across your city with photos and pricing." },
+  { n: "3", title: "Connect with owners", desc: "Chat directly and schedule visits at your convenience." },
+  { n: "4", title: "Move in!", desc: "Confirm your room and settle into your new home." },
 ];
 
 /* ── Home icon (inline SVG) ── */
@@ -45,7 +45,7 @@ function AlertIcon() {
       stroke="currentColor" strokeWidth="2"
       strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10" />
-      <line x1="12" y1="8"  x2="12"    y2="12" />
+      <line x1="12" y1="8" x2="12" y2="12" />
       <line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
   );
@@ -57,10 +57,10 @@ function AlertIcon() {
 function Signup() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading]           = useState(false);
-  const [error, setError]               = useState("");
-  const [success, setSuccess]           = useState(false);
-  const [formData, setFormData]         = useState({
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [formData, setFormData] = useState({
     name: "", email: "", password: "", phone: "", role: "user",
   });
 
@@ -84,7 +84,7 @@ function Signup() {
     }
   };
 
-  const strength      = getStrength(formData.password);
+  const strength = getStrength(formData.password);
   const strengthLabel = STRENGTH_LABEL[strength];
   const strengthColor = STRENGTH_COLOR[strength];
 
@@ -161,7 +161,7 @@ function Signup() {
               onClick={() => setFormData({ ...formData, role: "user" })}
             >
               <User size={14} />
-            User
+              User
             </button>
             <button
               type="button"

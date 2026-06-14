@@ -1,26 +1,18 @@
 import React from "react";
-// import { BrowserRouter } from "react-router-dom";
-
 import Navbar from "./Comonentes/Navbar";
 import AppRoutes from "./routes/AppRoutes";
-// import Footer from "./Comonentes/Footer";
 import ScrollToTop from "./Comonentes/ScrollToTop";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
-
   return (
-
     <>
-
+      <Toaster position="top-right" />
       <Navbar />
       <ScrollToTop />
       <AppRoutes />
-
     </>
-
-
   );
-
 };
 
 export default App;

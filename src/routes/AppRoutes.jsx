@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import Home from "../Pages/Home";
 import Rooms from "../Pages/Rooms";
@@ -18,60 +18,72 @@ import Profile from "../Pages/Profile";
 import Footer from "../Comonentes/Footer";
 
 const AppRoutes = () => {
-  return ( 
+  const location = useLocation();
+
+  const hideFooterRoutes = [
+    "/owner-dashboard",
+    "/add-room",
+    "/my-rooms",
+    "/wishlist",
+  ];
+
+  const hideFooter =
+    hideFooterRoutes.includes(location.pathname) ||
+    location.pathname.startsWith("/edit-room/");
+  
+  return (
     <>
-    <Routes>
-      {/* PUBLIC ROUTES */}
-      <Route path="/" element={<Home />} />
-      <Route path="/rooms" element={<Rooms />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/room/:id" element={<RoomDetails />} />
-      <Route path="/wishlist" element={<Wishlist />} />
-      <Route path="/profile" element={<Profile />} />
+      <Routes>
+        {/* PUBLIC ROUTES */}
+        <Route path="/" element={<Home />} />
+        <Route path="/rooms" element={<Rooms />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/room/:id" element={<RoomDetails />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<Profile />} />
 
-      {/* OWNER PROTECTED ROUTES */}
-      <Route
-        path="/owner-dashboard"
-        element={
-          <OwnerRoute>
-            <OwnerDashboard />
-          </OwnerRoute>
-        }
+        {/* OWNER PROTECTED ROUTES */}
+        <Route
+          path="/owner-dashboard"
+          element={
+            <OwnerRoute>
+              <OwnerDashboard />
+            </OwnerRoute>
+          }
         />
 
-      <Route
-        path="/add-room"
-        element={
-          <OwnerRoute>
-            <AddRoom />
-          </OwnerRoute>
-        }
+        <Route
+          path="/add-room"
+          element={
+            <OwnerRoute>
+              <AddRoom />
+            </OwnerRoute>
+          }
         />
 
-      <Route
-        path="/my-rooms"
-        element={
-          <OwnerRoute>
-            <MyRooms />
-          </OwnerRoute>
-        }
+        <Route
+          path="/my-rooms"
+          element={
+            <OwnerRoute>
+              <MyRooms />
+            </OwnerRoute>
+          }
         />
 
-      <Route
-        path="/edit-room/:id"
-        element={
-          <OwnerRoute>
-            <EditRoom />
-          </OwnerRoute>
-        }
+        <Route
+          path="/edit-room/:id"
+          element={
+            <OwnerRoute>
+              <EditRoom />
+            </OwnerRoute>
+          }
         />
-      
-    </Routes>
-      <Footer />
-    
-        </>
+      </Routes>
+      {/* <Footer /> */}
+      {!hideFooter && <Footer />}
+    </>
   );
 };
 

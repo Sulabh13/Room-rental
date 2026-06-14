@@ -66,9 +66,8 @@ const Navbar = () => {
 
       {/* ── MAIN NAV ── */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
-          !isHomePage || scrolled ? styles.navWrapScrolled : styles.navWrapTop
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${!isHomePage || scrolled ? styles.navWrapScrolled : styles.navWrapTop
+          }`}
       >
         <div className="max-w-[1280px] mx-auto px-6 h-[68px] flex items-center justify-between">
 
@@ -88,11 +87,10 @@ const Navbar = () => {
               <li key={to}>
                 <Link
                   to={to}
-                  className={`relative no-underline text-sm font-medium px-[0.85rem] py-[0.45rem] rounded-lg tracking-[0.01em] transition-colors duration-200 ${
-                    isActive(to)
+                  className={`relative no-underline text-sm font-medium px-[0.85rem] py-[0.45rem] rounded-lg tracking-[0.01em] transition-colors duration-200 ${isActive(to)
                       ? `text-orange-500 bg-orange-500/10 ${styles.navLinkActive}`
                       : "text-white/80 hover:text-white hover:bg-white/[0.08]"
-                  }`}
+                    }`}
                 >
                   {label}
                 </Link>
@@ -136,18 +134,16 @@ const Navbar = () => {
 
       {/* ── OVERLAY ── */}
       <div
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
         style={{ zIndex: 49 }}
         onClick={() => setMenuOpen(false)}
       />
 
       {/* ── MOBILE DRAWER ── */}
       <aside
-        className={`fixed top-0 right-0 h-full bg-[#11111b] border-l border-white/[0.07] flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full bg-[#11111b] border-l border-white/[0.07] flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
         style={{ width: "min(320px, 90vw)", zIndex: 50 }}
       >
         {/* Drawer Header */}
@@ -177,16 +173,14 @@ const Navbar = () => {
               key={to}
               to={to}
               onClick={() => setMenuOpen(false)}
-              className={`flex items-center gap-[0.875rem] px-4 py-[0.875rem] rounded-xl no-underline text-[0.975rem] font-medium transition-all duration-200 ${
-                isActive(to)
+              className={`flex items-center gap-[0.875rem] px-4 py-[0.875rem] rounded-xl no-underline text-[0.975rem] font-medium transition-all duration-200 ${isActive(to)
                   ? "text-orange-500 bg-orange-500/10"
                   : "text-white/65 hover:text-white hover:bg-white/[0.07]"
-              }`}
+                }`}
             >
               <span
-                className={`flex items-center justify-center w-9 h-9 rounded-[9px] flex-shrink-0 transition-colors duration-200 ${
-                  isActive(to) ? "bg-orange-500/15" : "bg-white/[0.06]"
-                }`}
+                className={`flex items-center justify-center w-9 h-9 rounded-[9px] flex-shrink-0 transition-colors duration-200 ${isActive(to) ? "bg-orange-500/15" : "bg-white/[0.06]"
+                  }`}
               >
                 <Icon size={16} />
               </span>

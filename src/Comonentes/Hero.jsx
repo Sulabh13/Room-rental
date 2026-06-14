@@ -250,17 +250,22 @@ const Hero = () => {
           {/* Popular Cities */}
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <span className="text-stone-400 text-xs font-medium">Popular:</span>
-            {["Mumbai", "Delhi", "Bangalore", "Bhopal", "Pune", "Balaghat"].map(
-              (city) => (
-                <button
-                  key={city}
-                  onClick={() => handlePopularCity(city)}
-                  className="text-xs text-stone-500 bg-stone-100 hover:bg-amber-50 hover:text-amber-700 px-3 py-1 rounded-full transition-colors font-medium border border-transparent hover:border-amber-200"
-                >
-                  {city}
-                </button>
-              ),
-            )}
+            {[
+              "Prem Nagar",
+              "Moti Nagar",
+              "Narmada Nagar",
+              "Bhatera",
+              "Budi",
+              "Gaykhori Road",
+            ].map((city) => (
+              <button
+                key={city}
+                onClick={() => handlePopularCity(city)}
+                className="text-xs text-stone-500 bg-stone-100 hover:bg-amber-50 hover:text-amber-700 px-3 py-1 rounded-full transition-colors font-medium border border-transparent hover:border-amber-200"
+              >
+                {city}
+              </button>
+            ))}
           </div>
         </div>
 

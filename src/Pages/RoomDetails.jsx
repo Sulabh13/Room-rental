@@ -102,9 +102,8 @@ const Lightbox = ({ images, startIndex, onClose }) => {
               src={img}
               alt={`thumb-lb-${i}`}
               onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
-              className={`h-14 w-20 object-cover rounded-lg cursor-pointer flex-shrink-0 border-2 transition ${
-                i === current ? "border-white opacity-100" : "border-transparent opacity-40 hover:opacity-70"
-              }`}
+              className={`h-14 w-20 object-cover rounded-lg cursor-pointer flex-shrink-0 border-2 transition ${i === current ? "border-white opacity-100" : "border-transparent opacity-40 hover:opacity-70"
+                }`}
             />
           ))}
         </div>
@@ -371,9 +370,8 @@ const RoomDetails = () => {
 
       {/* TOAST */}
       {toast && (
-        <div className={`fixed top-5 right-5 z-[999] px-5 py-3 rounded-xl shadow-2xl text-white text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-          toast.type === "success" ? "bg-black" : "bg-red-500"
-        }`}>
+        <div className={`fixed top-5 right-5 z-[999] px-5 py-3 rounded-xl shadow-2xl text-white text-sm font-medium transition-all duration-300 flex items-center gap-2 ${toast.type === "success" ? "bg-black" : "bg-red-500"
+          }`}>
           {toast.type === "success"
             ? <CheckCircle size={15} />
             : <XCircle size={15} />

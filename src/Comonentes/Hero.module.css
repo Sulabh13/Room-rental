@@ -4,6 +4,7 @@
 .heroRoot * {
   font-family: "Inter", sans-serif;
 }
+
 .heroRoot .display {
   font-family: "Syne", sans-serif;
 }
@@ -21,55 +22,68 @@
     opacity: 0;
     transform: translateY(-24px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 @keyframes fadeUp {
   from {
     opacity: 0;
     transform: translateY(32px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 @keyframes scaleUp {
   from {
     opacity: 0;
     transform: scale(0.94) translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
 }
+
 @keyframes shimmer {
   0% {
     background-position: -200% center;
   }
+
   100% {
     background-position: 200% center;
   }
 }
+
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-8px);
   }
 }
+
 @keyframes pulse-ring {
   0% {
     box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6);
   }
+
   70% {
     box-shadow: 0 0 0 8px rgba(251, 191, 36, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
   }
@@ -79,29 +93,31 @@
 .animBadge {
   animation: fadeDown 0.6s ease 0.1s both;
 }
+
 .animTitle {
   animation: fadeDown 0.7s ease 0.25s both;
 }
+
 .animSub {
   animation: fadeUp 0.7s ease 0.4s both;
 }
+
 .animSearch {
   animation: scaleUp 0.7s ease 0.55s both;
 }
+
 .animStats {
   animation: fadeUp 0.7s ease 0.75s both;
 }
 
 /* ── SHIMMER TEXT (needs -webkit-background-clip) ── */
 .shimmerText {
-  background: linear-gradient(
-    90deg,
-    #fbbf24,
-    #f97316,
-    #fbbf24,
-    #fde68a,
-    #fbbf24
-  );
+  background: linear-gradient(90deg,
+      #fbbf24,
+      #f97316,
+      #fbbf24,
+      #fde68a,
+      #fbbf24);
   background-size: 300% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -125,10 +141,12 @@
   transition: all 0.25s ease;
   background: #fafafa;
 }
+
 .searchField:hover {
   border-color: #d1d5db;
   background: #fff;
 }
+
 .searchFieldActive {
   border-color: #f59e0b;
   background: #fff;
@@ -141,6 +159,7 @@
   transition: all 0.3s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
+
 .searchBtn:hover {
   background: linear-gradient(135deg, #f59e0b, #d97706);
   transform: translateY(-1px);
@@ -154,6 +173,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
 }
+
 .statCard:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-3px);
@@ -171,6 +191,7 @@
 .floatingBadge {
   animation: float 3s ease-in-out infinite;
 }
+
 .floatingBadge2 {
   animation: float 3s ease-in-out 1.5s infinite;
 }
