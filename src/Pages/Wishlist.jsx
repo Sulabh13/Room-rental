@@ -23,6 +23,7 @@ const Wishlist = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
+  const role = localStorage.getItem("role");
 
   /* ── FETCH WISHLIST ── */
   const fetchWishlist = async () => {
@@ -77,24 +78,50 @@ const Wishlist = () => {
     navigate("/");
   };
 
-  const navLinks = [
-    {
-      to: "/owner-dashboard",
-      label: "Dashboard",
-      icon: <LayoutDashboard size={18} />,
-    },
-    { to: "/add-room", label: "Add Room", icon: <PlusCircle size={18} /> },
-    { to: "/my-rooms", label: "My Rooms", icon: <Home size={18} /> },
-    { to: "/wishlist", label: "My Wishlist", icon: <Heart size={18} /> },
-  ];
+  const navLinks =
+    role === "owner"
+      ? [
+          {
+            to: "/owner-dashboard",
+            label: "Dashboard",
+            icon: <LayoutDashboard size={18} />,
+          },
+          {
+            to: "/add-room",
+            label: "Add Room",
+            icon: <PlusCircle size={18} />,
+          },
+          {
+            to: "/my-rooms",
+            label: "My Rooms",
+            icon: <Home size={18} />,
+          },
+          {
+            to: "/wishlist",
+            label: "My Wishlist",
+            icon: <Heart size={18} />,
+          },
+        ]
+      : [
+          {
+            to: "/wishlist",
+            label: "My Wishlist",
+            icon: <Heart size={18} />,
+          },
+        ];
 
   /* ── SHARED SIDEBAR CONTENT ── */
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-screen">
       {/* LOGO */}
       <div className="px-6 py-5 border-b border-gray-100">
-        <h2 className="text-xl font-bold text-gray-800">🏠 Owner Panel</h2>
-        <p className="text-xs text-gray-400 mt-0.5">Manage your listings</p>
+        <h2 className="text-xl font-bold text-gray-800">
+          {role === "owner" ? "🏠 Owner Panel" : "❤️ Wishlist"}
+        </h2>
+
+        <p className="text-xs text-gray-400 mt-0.5">
+          {role === "owner" ? "Manage your listings" : "Saved Rooms"}
+        </p>
       </div>
 
       {/* NAV LINKS */}
@@ -124,25 +151,30 @@ const Wishlist = () => {
       </nav>
 
       {/* PROFILE + LOGOUT */}
-      <div className="px-4 py-4 border-t border-gray-100">
+      <div className="px-4 py-12 border-t border-gray-100 mt-auto">
         <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gray-50 mb-3">
-          <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center">
-            <User size={18} className="text-blue-600" />
-          </div>
+          <img
+            src={
+              user?.profile_image ||
+              "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+            }
+            alt="profile"
+            className="w-9 h-9 rounded-full object-cover border"
+          />
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-sm text-gray-800 truncate">
               {user?.name}
             </p>
             <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 w-full px-4 py-2.5 rounded-xl text-red-500 hover:bg-red-50 text-sm font-medium transition"
+            >
+              <LogOut size={16} />
+              Logout
+            </button>
           </div>
         </div>
-        <button
-          onClick={logout}
-          className="flex items-center gap-2 w-full px-4 py-2.5 rounded-xl text-red-500 hover:bg-red-50 text-sm font-medium transition"
-        >
-          <LogOut size={16} />
-          Logout
-        </button>
       </div>
     </div>
   );

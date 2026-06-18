@@ -1,15 +1,21 @@
 import { Navigate } from "react-router-dom";
 
 const OwnerRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
-    const role = localStorage.getItem("role");
+  // Not Logged In
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
 
-    if (role !== "owner") {
-        return <Navigate to="/wishlist" />;
-    }
+  // Logged In But Not Owner
+  if (role !== "owner") {
+    return <Navigate to="/wishlist" replace />;
+  }
 
-    return children;
-
+  // Logged In Owner
+  return children;
 };
 
 export default OwnerRoute;

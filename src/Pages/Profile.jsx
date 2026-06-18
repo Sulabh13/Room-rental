@@ -1,14 +1,24 @@
-// import ProfileForm from "../Components/ProfileForm";
-// import ChangePassword from "../Components/ChangePassword";
-// import ProfileStats from "../Components/ProfileStats";
-
+import { useEffect, useState } from "react";
 import ChangePassword from "../Comonentes/ChangePassword";
 import ProfileForm from "../Comonentes/ProfileForm";
 import ProfileStats from "../Comonentes/ProfileStats";
 
 const Profile = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+
   const role = localStorage.getItem("role");
+
+  useEffect(() => {
+    const updateUser = () => {
+      setUser(JSON.parse(localStorage.getItem("user")));
+    };
+
+    window.addEventListener("loginStateChange", updateUser);
+
+    return () => {
+      window.removeEventListener("loginStateChange", updateUser);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 pt-32">
@@ -19,7 +29,7 @@ const Profile = () => {
           <div className="text-center">
             <img
               src={
-                user?.image ||
+                user?.profile_image ||
                 "https://cdn-icons-png.flaticon.com/512/149/149071.png"
               }
               alt="profile"
@@ -44,9 +54,9 @@ const Profile = () => {
 
         {/* PASSWORD */}
 
-        <div className="bg-white p-6 rounded-xl shadow md:col-span-2">
+        {/* <div className="bg-white p-6 rounded-xl shadow md:col-span-2">
           <ChangePassword />
-        </div>
+        </div> */}
 
         {/* OWNER STATS */}
 

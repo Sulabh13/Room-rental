@@ -1,4 +1,6 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+// import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 import Home from "../Pages/Home";
 import Rooms from "../Pages/Rooms";
@@ -16,9 +18,16 @@ import OwnerRoute from "./OwnerRoute";
 import EditRoom from "../Pages/EditRoom";
 import Profile from "../Pages/Profile";
 import Footer from "../Comonentes/Footer";
+import ResetPassword from "../Pages/ResetPassword";
+import ForgotPassword from "../Pages/ForgotPassword";
+import VerifyEmail from "../Pages/VerifyEmail";
 
 const AppRoutes = () => {
   const location = useLocation();
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+
+  const isLoggedIn = !!(token && user);
 
   const hideFooterRoutes = [
     "/owner-dashboard",
@@ -30,7 +39,7 @@ const AppRoutes = () => {
   const hideFooter =
     hideFooterRoutes.includes(location.pathname) ||
     location.pathname.startsWith("/edit-room/");
-  
+
   return (
     <>
       <Routes>
@@ -38,11 +47,34 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/rooms" element={<Rooms />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/login"
+          element={isLoggedIn ? <Navigate to="/profile" replace /> : <Login />}
+        />
+        <Route
+          path="/signup"
+          element={isLoggedIn ? <Navigate to="/profile" replace /> : <Signup />}
+        />
         <Route path="/room/:id" element={<RoomDetails />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
         {/* OWNER PROTECTED ROUTES */}
         <Route
