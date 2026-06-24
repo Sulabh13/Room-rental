@@ -2,8 +2,15 @@ import { useState } from "react";
 import API from "../api/axios";
 import { useNavigate, Link } from "react-router-dom";
 import {
-  Eye, EyeOff, Mail, Lock, User, Phone, ChevronRight,
-  Loader2, CheckCircle2,
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  Phone,
+  ChevronRight,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
 import styles from "./Signup.module.css";
 
@@ -20,18 +27,41 @@ function getStrength(pwd) {
 
 /* ── Step data ── */
 const STEPS = [
-  { n: "1", title: "Create your account", desc: "Fill in your basic details — takes less than 2 minutes." },
-  { n: "2", title: "Browse listings", desc: "Explore verified rooms across your city with photos and pricing." },
-  { n: "3", title: "Connect with owners", desc: "Chat directly and schedule visits at your convenience." },
-  { n: "4", title: "Move in!", desc: "Confirm your room and settle into your new home." },
+  {
+    n: "1",
+    title: "Create your account",
+    desc: "Fill in your basic details — takes less than 2 minutes.",
+  },
+  {
+    n: "2",
+    title: "Browse listings",
+    desc: "Explore verified rooms across your city with photos and pricing.",
+  },
+  {
+    n: "3",
+    title: "Connect with owners",
+    desc: "Chat directly and schedule visits at your convenience.",
+  },
+  {
+    n: "4",
+    title: "Move in!",
+    desc: "Confirm your room and settle into your new home.",
+  },
 ];
 
 /* ── Home icon (inline SVG) ── */
 function HomeIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2"
-      strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
     </svg>
@@ -41,9 +71,16 @@ function HomeIcon() {
 /* ── Alert icon (inline SVG) ── */
 function AlertIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2"
-      strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="12" cy="12" r="10" />
       <line x1="12" y1="8" x2="12" y2="12" />
       <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -61,7 +98,11 @@ function Signup() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    name: "", email: "", password: "", phone: "", role: "user",
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    role: "user",
   });
 
   const handleChange = (e) => {
@@ -78,7 +119,9 @@ function Signup() {
       setSuccess(true);
       setTimeout(() => navigate("/login"), 1800);
     } catch (err) {
-      setError(err.response?.data?.message || "Signup failed. Please try again.");
+      setError(
+        err.response?.data?.message || "Signup failed. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -90,7 +133,6 @@ function Signup() {
 
   return (
     <div className={styles.root}>
-
       {/* ══ LEFT PANEL ══ */}
       <div className={styles.left}>
         <div className={`${styles.blob} ${styles.blob1}`} />
@@ -100,7 +142,9 @@ function Signup() {
         {/* Logo */}
         <div className={styles.leftLogo}>
           <span className={styles.logoDot} />
-          <span className={styles.logoText}>Room<em>Finder</em></span>
+          <span className={styles.logoText}>
+            Room<em>Finder</em>
+          </span>
         </div>
 
         {/* Steps */}
@@ -120,13 +164,19 @@ function Signup() {
         {/* Bottom quote + stats */}
         <div>
           <div className={styles.leftQuote}>
-            Find your <em>perfect</em><br />room today
+            Find your <em>perfect</em>
+            <br />
+            room today
           </div>
           <div className={styles.leftQuoteSub}>
             Join thousands of happy tenants who found their home on RoomFinder.
           </div>
           <div className={styles.miniStats}>
-            {[["2K+", "Listings"], ["500+", "Tenants"], ["50+", "Cities"]].map(([n, l]) => (
+            {[
+              ["2K+", "Listings"],
+              ["500+", "Tenants"],
+              ["50+", "Cities"],
+            ].map(([n, l]) => (
               <div className={styles.miniStat} key={l}>
                 <div className={styles.miniStatN}>{n}</div>
                 <div className={styles.miniStatL}>{l}</div>
@@ -141,17 +191,22 @@ function Signup() {
         <div className={styles.dotGrid} />
 
         <div className={styles.wrap}>
-
           {/* Logo */}
           <div className={styles.logo}>
             <span className={styles.logoDot} />
-            <span className={styles.logoText}>Room<em>Finder</em></span>
+            <span className={styles.logoText}>
+              Room<em>Finder</em>
+            </span>
           </div>
 
           <h1 className={styles.h1}>
-            Create your<br /><em>account</em>
+            Create your
+            <br />
+            <em>account</em>
           </h1>
-          <p className={styles.sub}>Join us and find the perfect room for you.</p>
+          <p className={styles.sub}>
+            Join us and find the perfect room for you.
+          </p>
 
           {/* Role toggle */}
           <div className={styles.roleWrap}>
@@ -177,7 +232,11 @@ function Signup() {
           {success && (
             <div className={styles.success}>
               <CheckCircle2 size={28} className={styles.successIcon} />
-              <span>Account created successfully!<br />Redirecting to login…</span>
+              <span>
+                Account created successfully!
+                <br />
+                Redirecting to login…
+              </span>
             </div>
           )}
 
@@ -185,7 +244,6 @@ function Signup() {
           {!success && (
             <form onSubmit={handleSubmit}>
               <div className={styles.fields}>
-
                 {/* Name + Phone */}
                 <div className={styles.grid2}>
                   <div className={styles.field} style={{ "--d": "0.45s" }}>
@@ -207,9 +265,20 @@ function Signup() {
                       name="phone"
                       placeholder="Phone"
                       className={styles.input}
-                      onChange={handleChange}
+                      value={formData.phone}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+
+                        if (value.length <= 10) {
+                          setFormData({
+                            ...formData,
+                            phone: value,
+                          });
+                        }
+                      }}
                       required
                       autoComplete="tel"
+                      maxLength={10}
                     />
                   </div>
                 </div>
@@ -259,7 +328,10 @@ function Signup() {
                           <div
                             key={lvl}
                             className={styles.bar}
-                            style={{ background: strength >= lvl ? strengthColor : "#ede8e2" }}
+                            style={{
+                              background:
+                                strength >= lvl ? strengthColor : "#ede8e2",
+                            }}
                           />
                         ))}
                       </div>
@@ -289,16 +361,20 @@ function Signup() {
                 disabled={loading}
               >
                 {loading ? (
-                  <><Loader2 size={16} className={styles.spin} /> Creating account…</>
+                  <>
+                    <Loader2 size={16} className={styles.spin} /> Creating
+                    account…
+                  </>
                 ) : (
-                  <>Create Account <ChevronRight size={16} /></>
+                  <>
+                    Create Account <ChevronRight size={16} />
+                  </>
                 )}
               </button>
 
               <p className={styles.terms}>
-                By signing up you agree to our{" "}
-                <a href="#">Terms of Service</a> and{" "}
-                <a href="#">Privacy Policy</a>.
+                By signing up you agree to our <a href="#">Terms of Service</a>{" "}
+                and <a href="#">Privacy Policy</a>.
               </p>
             </form>
           )}

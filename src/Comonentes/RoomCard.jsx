@@ -8,7 +8,11 @@ const RoomCard = ({ room }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   useEffect(() => {
-    checkWishlist();
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      checkWishlist();
+    }
   }, []);
 
   const checkWishlist = async () => {
